@@ -1,2 +1,2 @@
 # Raindrop
-Javascript+Canvas MIDI Visualizer / Player
+three.js & MIDI.js Visualizer / Player
