@@ -14,7 +14,7 @@ window.onload = function() {
     },
     onsuccess: function() {
       player = MIDI.Player;
-      //player.loadFile(song, player.start);
+      player.loadFile(song, player.start);
     }
   });
 
