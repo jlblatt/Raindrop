@@ -65,18 +65,21 @@ function animate() {
 
   if(_PLAYER.playing && !eventInRange) {
     _PLAYER.pause();
+  } else if(_PLAYER.playing && eventInRange) {
+    //what do
+  } else if(!_PLAYER.playing && !eventInRange) {
+    //we do here?
   } else if(!_PLAYER.playing && eventInRange) {
     _PLAYER.resume();
   }
 
-  if(_PLAYER.playing) {
-
-  }
-
   requestAnimationFrame( animate );
 
-  mesh.rotation.x += 0.01;
-  mesh.rotation.y += 0.02;
+  if(_PLAYER.playing) {
+    //update objects
+    mesh.rotation.x += 0.01;
+    mesh.rotation.y += 0.02;
+  }
 
   renderer.render( scene, camera );
 
