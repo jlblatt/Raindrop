@@ -1,10 +1,17 @@
-var _PLAYER,
-    _BEAT = {length: null, last: null};
+var _BEAT = {length: null, last: null},
+    _MOUSE = {last: Date.now()},
+    _PLAYER;
 
 var scene, camera, renderer;
 var geometry, material, mesh;
 
 window.onload = function() {
+
+  //init user input
+
+  window.onmousemove = function(e) {
+    _MOUSE.last = Date.now();
+  }
 
   //init three.js
 
@@ -34,9 +41,7 @@ window.onload = function() {
     onsuccess: function() {
       _PLAYER = MIDI.Player;
       _BEAT.length = 60000 / _PLAYER.BPM;
-      //_PLAYER.loadFile(_SONG, _PLAYER.start);
-
-      //run
+      _PLAYER.loadFile(_SONG, _PLAYER.start);
       animate();
     }
   });
@@ -56,7 +61,17 @@ window.onload = function() {
 
 function animate() {
 
-  _BEAT.last = Date.now();
+  var eventInRange = Date.now() - _MOUSE.last < _BEAT.length;
+
+  if(_PLAYER.playing && !eventInRange) {
+    _PLAYER.pause();
+  } else if(!_PLAYER.playing && eventInRange) {
+    _PLAYER.resume();
+  }
+
+  if(_PLAYER.playing) {
+
+  }
 
   requestAnimationFrame( animate );
 
