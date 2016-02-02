@@ -43,13 +43,13 @@ window.onload = function() {
       _PLAYER = MIDI.Player;
       _BEAT.length = 60000 / (_PLAYER.BPM * 4);
       _PLAYER.loadFile(_SONG, _PLAYER.start);
-      animate();
+      loop();
     }
   });
 
 }
 
-function animate() {
+function loop() {
 
   _BEAT.delay = _BEAT.last - Date.now();
   _BEAT.last = Date.now();
@@ -60,10 +60,8 @@ function animate() {
     _PLAYER.pause();
   } else if(_PLAYER.playing && eventInRange) {
     if(Date.now() - _BEAT.delay - _BEAT.spawn > _BEAT.length) {
-      //console.log(Date.now() - _BEAT.spawn);  //should be close to _BEAT.length - how to normalize?
       _BEAT.spawn = Date.now();
-      mesh.rotation.x += 0.1;
-      mesh.rotation.y += 0.2;
+      animate(true);
     }
   } else if(!_PLAYER.playing && !eventInRange) {
     //this time we do nothing
@@ -71,14 +69,19 @@ function animate() {
     _PLAYER.resume();
   }
 
-  requestAnimationFrame( animate );
+  requestAnimationFrame(loop);
 
   if(_PLAYER.playing) {
-    //update objects
-    //mesh.rotation.x += 0.01;
-    //mesh.rotation.y += 0.02;
+    animate(false);
   }
 
   renderer.render( scene, camera );
 
+}
+
+function animate(adv) {
+  if(adv) {
+    mesh.rotation.x += 0.1;
+    mesh.rotation.y += 0.2;
+  }
 }
