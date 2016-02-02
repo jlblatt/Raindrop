@@ -1,5 +1,5 @@
-var _BEAT = {length: null, last: null, spawn: Date.now()},
-    _MOUSE = {last: Date.now()},
+var _BEAT = {length: null, last: null, delay: null, spawn: Date.now()},
+    _MOUSE = {last: Date.now(), e: null},
     _PLAYER;
 
 var scene, camera, renderer;
@@ -10,6 +10,7 @@ window.onload = function() {
   //init user input
 
   window.onmousemove = function(e) {
+    _MOUSE.e = e;
     _MOUSE.last = Date.now();
   }
 
@@ -50,12 +51,15 @@ window.onload = function() {
 
 function animate() {
 
+  _BEAT.delay = _BEAT.last - Date.now();
+  _BEAT.last = Date.now();
+
   var eventInRange = Date.now() - _MOUSE.last < _BEAT.length;
 
   if(_PLAYER.playing && !eventInRange) {
     _PLAYER.pause();
   } else if(_PLAYER.playing && eventInRange) {
-    if(Date.now() - _BEAT.spawn > _BEAT.length) {
+    if(Date.now() - _BEAT.delay - _BEAT.spawn > _BEAT.length) {
       //console.log(Date.now() - _BEAT.spawn);  //should be close to _BEAT.length - how to normalize?
       _BEAT.spawn = Date.now();
       mesh.rotation.x += 0.1;
