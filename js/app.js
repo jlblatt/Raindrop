@@ -1,7 +1,10 @@
 var _FPS = {last: Date.now(), count: 0},
     _BEAT = {length: null},
-    _MOUSE = {last: Date.now(), e: null},
-    _PLAYER;
+    _MOUSE = {last: Date.now(), e: null};
+
+var _SONGS = [
+  {fn: "mcis.mid", bpm: 90}
+];
 
 var scene, camera, renderer;
 var geometry, material, mesh;
@@ -22,8 +25,8 @@ window.onload = function() {
   camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 );
   camera.position.z = 1000;
 
-  geometry = new THREE.BoxGeometry( 200, 200, 200 );
-  material = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe: true } );
+  geometry = new THREE.BoxGeometry( 400, 400, 400 );
+  material = new THREE.MeshBasicMaterial( { color: 0xcccccc, wireframe: true } );
 
   mesh = new THREE.Mesh( geometry, material );
   scene.add( mesh );
@@ -41,13 +44,16 @@ window.onload = function() {
 
     },
     onsuccess: function() {
-      _PLAYER = MIDI.Player;
-      _BEAT.length = 60000 / (_PLAYER.BPM * 4);
-      _PLAYER.loadFile(_SONG, _PLAYER.start);
+      var song = _SONGS[Math.floor(Math.random() * _SONGS.length)];
 
-      _PLAYER.addListener(function(e) {
+      MIDI.Player.BPM = song.bpm;
+      _BEAT.length = 60000 / (MIDI.Player.BPM * 4);
+      MIDI.Player.loadFile('midi/' + song.fn, MIDI.Player.start);
+
+      MIDI.Player.addListener(function(e) {
         //console.log(e.channel + ' / ' + e.note + ' / ' + e.velocity);
-        spawn();
+        if(e.message = 144) spawn();
+        else if(e.message = 128) despawn();
 			});
 
       loop();
@@ -62,12 +68,12 @@ function loop() {
 
   //play/pause midi on mouse move
 
-  var eventInRange = Date.now() - _MOUSE.last < _BEAT.length;
+  var eventInRange = Date.now() - _MOUSE.last < _BEAT.length * 4;
 
-  if(_PLAYER.playing && !eventInRange) {
-    _PLAYER.pause();
-  } else if(!_PLAYER.playing && eventInRange) {
-    _PLAYER.resume();
+  if(MIDI.Player.playing && !eventInRange) {
+    MIDI.Player.pause();
+  } else if(!MIDI.Player.playing && eventInRange) {
+    MIDI.Player.resume();
   }
 
   animate();
@@ -86,7 +92,7 @@ function loop() {
 
 }
 
-function animate(adv) {
+function animate() {
 
 
 }
@@ -94,4 +100,8 @@ function animate(adv) {
 function spawn() {
   mesh.rotation.x += 0.1;
   mesh.rotation.y += 0.2;
+}
+
+function despawn() {
+
 }
