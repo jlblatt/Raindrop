@@ -68,10 +68,12 @@ window.onload = function() {
         if(!MIDI.Player.playing) {
           MIDI.Player.resume();
         }
+
+        return false;
       }
 
       //skip ahead to test
-      //MIDI.Player.currentTime = 46000;
+      //MIDI.Player.currentTime = 60000;
 
       loop();
 
@@ -198,7 +200,7 @@ function spawn(note) {
       drop(mesh);
     }
 
-    else {
+    else if(note.channel == 2){
       var size = (note.velocity + note.note) * Math.random() * 3;
       var g = Math.floor(128 + (Math.random() * 128));
       var r = g - 64;
@@ -215,6 +217,36 @@ function spawn(note) {
       function drop(mesh) {
         mesh.material.opacity -= .003;
         mesh.rotation.z += .03;
+        if(mesh.material.opacity < 0) {
+          SCENE.remove(mesh);
+        } else {
+          setTimeout(function(){
+            drop(mesh);
+          }, 16);
+        }
+      }
+
+      drop(mesh);
+    }
+
+    else {
+      var size = (note.velocity + note.note) * Math.random();
+      var g = Math.floor(128 + (Math.random() * 128));
+      var r = g;
+      var b = g - 64;
+      var opacity = .80 + (Math.random() * .2);
+
+      var material = new THREE.MeshBasicMaterial({color: "rgb(" + r + ", " + g + ", " + b + ")", transparent: true, opacity: opacity});
+      var geometry = new THREE.CircleGeometry(size, 36);
+      geometry.translate(x, y, 0);
+      var mesh = new THREE.Mesh(geometry, material);
+
+      SCENE.add(mesh);
+
+      function drop(mesh) {
+        mesh.material.opacity -= .002;
+        mesh.scale.x += .01;
+        mesh.scale.y += .01;
         if(mesh.material.opacity < 0) {
           SCENE.remove(mesh);
         } else {
