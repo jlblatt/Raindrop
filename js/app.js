@@ -1,5 +1,4 @@
-//set this variable to true after downloading https://github.com/gleitz/midi-js-soundfonts and placing in soundfont directory
-var _SOUNDFONT_LIBRARY = false;
+var _USE_FULL_SOUNDFONT_LIBRARY = false; //set this variable to true after downloading https://github.com/gleitz/midi-js-soundfonts and placing in soundfont directory
 
 var FPS = {last: Date.now(), count: 0},
     MOUSE = {last: Date.now(), e: null};
@@ -8,35 +7,25 @@ var SONGS = [
   {path: "midi/mcis.mid", bpm: 86, instruments: ["cello", "cello", "reed_organ", "clarinet"]}
 ];
 
-var scene, camera, renderer;
-var geometry, material, mesh;
+var SCENE, CAMERA, RENDERER;
+
+////////////////////////////////
+// INIT
+////////////////////////////////
 
 window.onload = function() {
 
-  //init user input
-
-  window.onmousemove = function(e) {
-    MOUSE.e = e;
-    MOUSE.last = Date.now();
-  }
-
   //init three.js
 
-  scene = new THREE.Scene();
+  SCENE = new THREE.Scene();
 
-  camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 );
-  camera.position.z = 1000;
+  CAMERA = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 );
+  CAMERA.position.z = 1000;
 
-  geometry = new THREE.BoxGeometry( 400, 400, 400 );
-  material = new THREE.MeshBasicMaterial( { color: 0xcccccc, wireframe: true } );
+  RENDERER = new THREE.WebGLRenderer();
+  RENDERER.setSize( window.innerWidth, window.innerHeight );
 
-  mesh = new THREE.Mesh( geometry, material );
-  scene.add( mesh );
-
-  renderer = new THREE.WebGLRenderer();
-  renderer.setSize( window.innerWidth, window.innerHeight );
-
-  document.body.appendChild( renderer.domElement );
+  document.body.appendChild( RENDERER.domElement );
 
   //init MIDI.js
 
@@ -45,7 +34,7 @@ window.onload = function() {
   function playerSetup() {
     MIDI.Player.BPM = song.bpm;
 
-    if(_SOUNDFONT_LIBRARY) {
+    if(_USE_FULL_SOUNDFONT_LIBRARY) {
       for(var i = 0; i < song.instruments.length; i++) {
         MIDI.programChange(i, MIDI.GM.byName[song.instruments[i]].number);
       }
@@ -57,7 +46,22 @@ window.onload = function() {
       else if(e.message = 128) despawn(e);
 		});
 
-    MIDI.Player.loadFile(song.path, loop);  //run the animation after file loads
+    MIDI.Player.loadFile(song.path, function() {
+
+      //init user input and run the animation after file loads
+
+      window.onmousemove = function(e) {
+        MOUSE.e = e;
+        MOUSE.last = Date.now();
+
+        if(!MIDI.Player.playing) {
+          MIDI.Player.resume();
+        }
+      }
+
+      loop();
+
+    });
   }
 
   var opts = {
@@ -65,29 +69,33 @@ window.onload = function() {
     onsuccess: playerSetup
   };
 
-  if(_SOUNDFONT_LIBRARY) opts.instruments = song.instruments;
+  if(_USE_FULL_SOUNDFONT_LIBRARY) opts.instruments = song.instruments;
 
   MIDI.loadPlugin(opts);
 
 }
 
+////////////////////////////////
+// MAIN LOOP
+////////////////////////////////
+
 function loop() {
 
   requestAnimationFrame(loop);
 
-  //play/pause midi on mouse move
+  //pause midi if mouse has been idle
 
-  var eventInRange = Date.now() - MOUSE.last < 60000 / MIDI.Player.BPM;
-
-  if(MIDI.Player.playing && !eventInRange) {
+  if(MIDI.Player.playing && Date.now() - MOUSE.last > 60000 / MIDI.Player.BPM) {
     MIDI.Player.pause();
-  } else if(!MIDI.Player.playing && eventInRange) {
-    MIDI.Player.resume();
   }
 
-  animate();
+  //update our scene
 
-  renderer.render(scene, camera);
+  update();
+
+  //render
+
+  RENDERER.render(SCENE, CAMERA);
 
   //fps
 
@@ -101,15 +109,42 @@ function loop() {
 
 }
 
-function animate() {
+////////////////////////////////
+// SCENE UPDATE
+////////////////////////////////
+
+function update() {
 
 
 }
 
-function spawn(e) {
-  mesh.rotation.x += 0.1;
-  mesh.rotation.y += 0.2;
+////////////////////////////////
+// NOTE HITS
+////////////////////////////////
+
+function spawn(note) {
+
+    //no need to do expensive raycasting here since cursor is invisible
+
+    var size = Math.floor(Math.random() * 640);
+    var r = Math.floor(Math.random() * 256);
+    var b = Math.floor(Math.random() * 256);
+    var g = Math.floor(Math.random() * 256);
+
+    var material = new THREE.MeshBasicMaterial({ color: "rgb(" + r + ", " + g + ", " + b + ")", wireframe: true });
+    var circle = new THREE.CircleGeometry(size, 24);
+    var mesh = new THREE.Mesh(circle, material);
+    //mesh.rotation.x += Math.random();
+    //mesh.rotation.y += Math.random();
+
+    SCENE.add(mesh);
+
+
 }
+
+////////////////////////////////
+// NOTE RELEASES
+////////////////////////////////
 
 function despawn(e) {
 

@@ -1,6 +1,6 @@
 # Raindrop
 
-three.js & MIDI.js Visualizer / Player
+MIDI Visualizer / Player
 
 #### This exists because these exist:
 
@@ -11,9 +11,9 @@ three.js & MIDI.js Visualizer / Player
 
 ##### Instrument Support
 
-By default we only include and use one instrument (acoustic grand piano) for all channels.  For complete instrument support, download the MIDI.js Soundfonts from the link above, and change line 2 of js/app.js to:
+By default we only include and use one instrument (acoustic grand piano) for all channels.  For complete instrument support, download the MIDI.js Soundfonts from the link above, and change line 1 of js/app.js to:
 
-    var _SOUNDFONT_LIBRARY = true;
+    var _USE_FULL_SOUNDFONT_LIBRARY = true;
 
 ###### License:
 
