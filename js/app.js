@@ -1,4 +1,4 @@
-var _USE_FULL_SOUNDFONT_LIBRARY = true; //set this variable to true after downloading https://github.com/gleitz/midi-js-soundfonts and placing in soundfont directory
+var _USE_FULL_SOUNDFONT_LIBRARY = false; //set this variable to true after downloading https://github.com/gleitz/midi-js-soundfonts and placing in soundfont directory
 
 var FPS = {last: Date.now(), count: 0},
     MOUSE = {last: Date.now(), e: null};
@@ -60,7 +60,7 @@ window.onload = function() {
       }
 
       //skip ahead to test
-      MIDI.Player.currentTime = 46000;
+      //MIDI.Player.currentTime = 46000;
 
       loop();
 
