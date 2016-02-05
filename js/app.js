@@ -1,9 +1,11 @@
-var _FPS = {last: Date.now(), count: 0},
-    _BEAT = {length: null},
-    _MOUSE = {last: Date.now(), e: null};
+//set this variable to true after downloading https://github.com/gleitz/midi-js-soundfonts and placing in soundfont directory
+var _SOUNDFONT_LIBRARY = false;
 
-var _SONGS = [
-  {fn: "mcis.mid", bpm: 90}
+var FPS = {last: Date.now(), count: 0},
+    MOUSE = {last: Date.now(), e: null};
+
+var SONGS = [
+  {path: "midi/mcis.mid", bpm: 86, instruments: ["cello", "cello", "reed_organ", "clarinet"]}
 ];
 
 var scene, camera, renderer;
@@ -14,8 +16,8 @@ window.onload = function() {
   //init user input
 
   window.onmousemove = function(e) {
-    _MOUSE.e = e;
-    _MOUSE.last = Date.now();
+    MOUSE.e = e;
+    MOUSE.last = Date.now();
   }
 
   //init three.js
@@ -38,27 +40,34 @@ window.onload = function() {
 
   //init MIDI.js
 
-  MIDI.loadPlugin({
-    soundfontUrl: "soundfont/",
-    onprogress: function(state, progress) {
+  var song = SONGS[Math.floor(Math.random() * SONGS.length)];
 
-    },
-    onsuccess: function() {
-      var song = _SONGS[Math.floor(Math.random() * _SONGS.length)];
+  function playerSetup() {
+    MIDI.Player.BPM = song.bpm;
 
-      MIDI.Player.BPM = song.bpm;
-      _BEAT.length = 60000 / (MIDI.Player.BPM * 4);
-      MIDI.Player.loadFile('midi/' + song.fn, MIDI.Player.start);
-
-      MIDI.Player.addListener(function(e) {
-        //console.log(e.channel + ' / ' + e.note + ' / ' + e.velocity);
-        if(e.message = 144) spawn();
-        else if(e.message = 128) despawn();
-			});
-
-      loop();
+    if(_SOUNDFONT_LIBRARY) {
+      for(var i = 0; i < song.instruments.length; i++) {
+        MIDI.programChange(i, MIDI.GM.byName[song.instruments[i]].number);
+      }
     }
-  });
+
+    MIDI.Player.addListener(function(e) {
+      //console.log(e.channel + ' / ' + e.note + ' / ' + e.velocity);
+      if(e.message = 144) spawn(e);
+      else if(e.message = 128) despawn(e);
+		});
+
+    MIDI.Player.loadFile(song.path, loop);  //run the animation after file loads
+  }
+
+  var opts = {
+    soundfontUrl: "soundfont/",
+    onsuccess: playerSetup
+  };
+
+  if(_SOUNDFONT_LIBRARY) opts.instruments = song.instruments;
+
+  MIDI.loadPlugin(opts);
 
 }
 
@@ -68,7 +77,7 @@ function loop() {
 
   //play/pause midi on mouse move
 
-  var eventInRange = Date.now() - _MOUSE.last < _BEAT.length * 4;
+  var eventInRange = Date.now() - MOUSE.last < 60000 / MIDI.Player.BPM;
 
   if(MIDI.Player.playing && !eventInRange) {
     MIDI.Player.pause();
@@ -82,12 +91,12 @@ function loop() {
 
   //fps
 
-  if(Date.now() - _FPS.last > 1000) {
-    //console.log(_FPS.count);
-    _FPS.count = 0;
-    _FPS.last = Date.now();
+  if(Date.now() - FPS.last > 1000) {
+    //console.log(FPS.count);
+    FPS.count = 0;
+    FPS.last = Date.now();
   } else {
-    _FPS.count++;
+    FPS.count++;
   }
 
 }
@@ -97,11 +106,11 @@ function animate() {
 
 }
 
-function spawn() {
+function spawn(e) {
   mesh.rotation.x += 0.1;
   mesh.rotation.y += 0.2;
 }
 
-function despawn() {
+function despawn(e) {
 
 }
