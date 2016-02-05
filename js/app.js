@@ -1,4 +1,4 @@
-var _USE_FULL_SOUNDFONT_LIBRARY = false; //set this variable to true after downloading https://github.com/gleitz/midi-js-soundfonts and placing in soundfont directory
+var _USE_FULL_SOUNDFONT_LIBRARY = true; //set this variable to true after downloading https://github.com/gleitz/midi-js-soundfonts and placing in soundfont directory
 
 var FPS = {last: Date.now(), count: 0},
     MOUSE = {last: Date.now(), e: null};
@@ -60,7 +60,7 @@ window.onload = function() {
       }
 
       //skip ahead to test
-      //MIDI.Player.currentTime = 46000;
+      MIDI.Player.currentTime = 46000;
 
       loop();
 
@@ -167,7 +167,7 @@ function spawn(note) {
       var opacity = .40 + (Math.random() * .2);
 
       var material = new THREE.MeshBasicMaterial({color: "rgb(" + r + ", " + g + ", " + b + ")", transparent: true, opacity: opacity, wireframe: true});
-      var geometry = new THREE.CircleGeometry(size, 32);
+      var geometry = new THREE.CircleGeometry(size, 24);
       var mesh = new THREE.Mesh(geometry, material);
 
       SCENE.add(mesh);
@@ -188,14 +188,14 @@ function spawn(note) {
     }
 
     else {
-      var size = (note.velocity + note.note) * Math.random() * 4;
+      var size = (note.velocity + note.note) * Math.random() * 3;
       var g = Math.floor(128 + (Math.random() * 128));
       var r = g - 64;
       var b = g - 64;
       var opacity = .40 + (Math.random() * .2);
 
       var material = new THREE.MeshBasicMaterial({color: "rgb(" + r + ", " + g + ", " + b + ")", transparent: true, opacity: opacity, wireframe: true});
-      var geometry = new THREE.CircleGeometry(size, 32);
+      var geometry = new THREE.CircleGeometry(size, 36);
       geometry.translate(x, y, 0);
       var mesh = new THREE.Mesh(geometry, material);
 
