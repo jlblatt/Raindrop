@@ -1,5 +1,5 @@
-var _TIMER = {last: null},
-    _BEAT = {length: null, last: Date.now()},
+var _FPS = {last: Date.now(), count: 0},
+    _BEAT = {length: null},
     _MOUSE = {last: Date.now(), e: null},
     _PLAYER;
 
@@ -44,6 +44,12 @@ window.onload = function() {
       _PLAYER = MIDI.Player;
       _BEAT.length = 60000 / (_PLAYER.BPM * 4);
       _PLAYER.loadFile(_SONG, _PLAYER.start);
+
+      _PLAYER.addListener(function(e) {
+        //console.log(e.channel + ' / ' + e.note + ' / ' + e.velocity);
+        spawn();
+			});
+
       loop();
     }
   });
@@ -54,35 +60,38 @@ function loop() {
 
   requestAnimationFrame(loop);
 
-  var delay = _TIMER.last - Date.now();
-  _TIMER.last = Date.now();
+  //play/pause midi on mouse move
 
   var eventInRange = Date.now() - _MOUSE.last < _BEAT.length;
 
   if(_PLAYER.playing && !eventInRange) {
     _PLAYER.pause();
-  } else if(_PLAYER.playing && eventInRange) {
-    if(Date.now() - delay - _BEAT.last >= _BEAT.length) {
-      _BEAT.last = Date.now();
-      animate(true);
-    }
-  } else if(!_PLAYER.playing && !eventInRange) {
-    //this time we do nothing
   } else if(!_PLAYER.playing && eventInRange) {
     _PLAYER.resume();
   }
 
-  if(_PLAYER.playing) {
-    animate(false);
-  }
+  animate();
 
   renderer.render(scene, camera);
+
+  //fps
+
+  if(Date.now() - _FPS.last > 1000) {
+    //console.log(_FPS.count);
+    _FPS.count = 0;
+    _FPS.last = Date.now();
+  } else {
+    _FPS.count++;
+  }
 
 }
 
 function animate(adv) {
-  if(adv) {
-    mesh.rotation.x += 0.1;
-    mesh.rotation.y += 0.2;
-  }
+
+
+}
+
+function spawn() {
+  mesh.rotation.x += 0.1;
+  mesh.rotation.y += 0.2;
 }
