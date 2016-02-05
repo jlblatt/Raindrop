@@ -59,6 +59,17 @@ window.onload = function() {
         }
       }
 
+      window.onkeypress = function(e) {
+        MOUSE.e = e;
+        MOUSE.e.clientX = Math.floor(Math.random() * window.innerWidth);
+        MOUSE.e.clientY = Math.floor(Math.random() * window.innerHeight);
+        MOUSE.last = Date.now();
+
+        if(!MIDI.Player.playing) {
+          MIDI.Player.resume();
+        }
+      }
+
       //skip ahead to test
       //MIDI.Player.currentTime = 46000;
 
@@ -88,7 +99,7 @@ function loop() {
 
   //pause midi if mouse has been idle
 
-  if(MIDI.Player.playing && Date.now() - MOUSE.last > 60000 / MIDI.Player.BPM) {
+  if(MIDI.Player.playing && (Date.now() - MOUSE.last) > (60000 / MIDI.Player.BPM * 2)) {
     MIDI.Player.pause();
   }
 
