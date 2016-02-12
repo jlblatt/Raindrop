@@ -11,7 +11,8 @@ var SONG = [
     path: "midi/mellon-collie-and-the-infinite-sadness.mid",
     bpm: 86,
     effectMapping: {
-      channels: ['test', 'test', 'test', 'test']
+      globals: ['test'],
+      channels: []
     }
   }
 ];
@@ -39,6 +40,12 @@ window.onload = function() {
   //setup song and effect mapping
 
   SONG = SONG[Math.floor(Math.random() * SONG.length)];
+
+  for(var i = 0; i < SONG.effectMapping.globals.length; i++) {
+    if(EFFECTS.hasOwnProperty(SONG.effectMapping.globals[i])) {
+      SONG.effectMapping.globals[i] = EFFECTS[SONG.effectMapping.globals[i]];
+    }
+  }
 
   for(var i = 0; i < SONG.effectMapping.channels.length; i++) {
     if(EFFECTS.hasOwnProperty(SONG.effectMapping.channels[i])) {
@@ -85,12 +92,21 @@ window.onload = function() {
 
     MIDI.Player.addListener(function(e) {
       NOTE.last = Date.now();
+
       var eMap = SONG.effectMapping.channels;
       if(eMap.length > e.channel && eMap[e.channel]) {
         if(e.message == 144 && eMap[e.channel].hasOwnProperty('spawn')) {
           eMap[e.channel].spawn(e);
         } else if(e.message == 128 && eMap[e.channel].hasOwnProperty('despawn')) {
           eMap[e.channel].despawn(e);
+        }
+      }
+
+      for(var i = 0; i < SONG.effectMapping.globals.length; i++) {
+        if(e.message == 144 && SONG.effectMapping.globals[i].hasOwnProperty('spawn')) {
+          SONG.effectMapping.globals[i].spawn(e);
+        } else if(e.message == 128 && SONG.effectMapping.globals[i].hasOwnProperty('despawn')) {
+          SONG.effectMapping.globals[i].despawn(e);
         }
       }
     });
@@ -105,7 +121,13 @@ window.onload = function() {
 
       for(var i = 0; i < SONG.effectMapping.channels.length; i++) {
         if(SONG.effectMapping.channels[i] && SONG.effectMapping.channels[i].hasOwnProperty('input')) {
-          SONG.effectMapping.channels[i].input(e);
+          SONG.effectMapping.channels[i].input();
+        }
+      }
+
+      for(var i = 0; i < SONG.effectMapping.globals.length; i++) {
+        if(SONG.effectMapping.globals[i] && SONG.effectMapping.globals[i].hasOwnProperty('input')) {
+          SONG.effectMapping.globals[i].input();
         }
       }
     }
@@ -148,9 +170,16 @@ function loop() {
   //simulate click track events
   if(MIDI.Player.playing && Date.now() > NOTE.next) {
     NOTE.next = Date.now() + (60000 / (MIDI.Player.BPM * 2));
+
     for(var i = 0; i < SONG.effectMapping.channels.length; i++) {
       if(SONG.effectMapping.channels[i] && SONG.effectMapping.channels[i].hasOwnProperty('click')) {
         SONG.effectMapping.channels[i].click();
+      }
+    }
+
+    for(var i = 0; i < SONG.effectMapping.globals.length; i++) {
+      if(SONG.effectMapping.globals[i] && SONG.effectMapping.globals[i].hasOwnProperty('click')) {
+        SONG.effectMapping.globals[i].click();
       }
     }
   }
@@ -159,6 +188,12 @@ function loop() {
   for(var i = 0; i < SONG.effectMapping.channels.length; i++) {
     if(SONG.effectMapping.channels[i] && SONG.effectMapping.channels[i].hasOwnProperty('tick')) {
       SONG.effectMapping.channels[i].tick();
+    }
+  }
+
+  for(var i = 0; i < SONG.effectMapping.globals.length; i++) {
+    if(SONG.effectMapping.globals[i] && SONG.effectMapping.globals[i].hasOwnProperty('tick')) {
+      SONG.effectMapping.globals[i].tick();
     }
   }
 

@@ -1,6 +1,7 @@
 EFFECTS['test'] = {
 
   spawn: function(note) {
+
     //fake cursor position in 3d scene here to save cycles as accuracy isn't important
 
     var x = ((INPUT.e.clientX / window.innerWidth) - .5) * window.innerWidth;
@@ -127,10 +128,10 @@ EFFECTS['test'] = {
   },
 
   click: function() {
-
+    
   },
 
-  input: function(e) {
+  input: function() {
 
   },
 
