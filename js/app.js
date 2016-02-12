@@ -41,6 +41,9 @@ window.onload = function() {
 
   SONG = SONG[Math.floor(Math.random() * SONG.length)];
 
+  if(!SONG.effectMapping.hasOwnProperty('channels')) SONG.effectMapping.channels = [];
+  if(!SONG.effectMapping.hasOwnProperty('globals')) SONG.effectMapping.globals = [];
+
   for(var i = 0; i < SONG.effectMapping.globals.length; i++) {
     if(EFFECTS.hasOwnProperty(SONG.effectMapping.globals[i])) {
       SONG.effectMapping.globals[i] = EFFECTS[SONG.effectMapping.globals[i]];
