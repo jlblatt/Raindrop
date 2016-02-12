@@ -1,6 +1,7 @@
 var _USE_FULL_SOUNDFONT_LIBRARY = false; //set this variable to true after downloading https://github.com/gleitz/midi-js-soundfonts and placing in soundfont directory
 
 var FPS = {show: false, last: Date.now(), count: 0},
+    NOTE = {last: Date.now()},
     MOUSE = {last: Date.now(), e: null};
 
 var SONGS = [
@@ -30,7 +31,7 @@ window.onload = function() {
   //init MIDI.js
 
   var song = SONGS[Math.floor(Math.random() * SONGS.length)];
-  if(song.bpm) MIDI.Player.BPM = song.bpm;
+  MIDI.Player.BPM = song.bpm ? song.bpm : 100;
 
   MIDI.loadPlugin({
     soundfontUrl: "soundfont/",
@@ -66,6 +67,7 @@ window.onload = function() {
   function appReady() {
 
     MIDI.Player.addListener(function(e) {
+      NOTE.last = Date.now();
       if(e.message = 144) spawn(e);
       else if(e.message = 128) despawn(e);
     });
@@ -108,9 +110,9 @@ function loop() {
 
   requestAnimationFrame(loop);
 
-  //pause midi if mouse has been idle
+  //pause midi if mouse has been idle and there have bee notes recent enough
 
-  if(MIDI.Player.playing && (Date.now() - MOUSE.last) > (60000 / MIDI.Player.BPM * 2)) {
+  if(MIDI.Player.playing && (Date.now() - MOUSE.last) > (60000 / MIDI.Player.BPM) && NOTE.last > (MOUSE.last + (40000 / MIDI.Player.BPM))) {
     MIDI.Player.pause();
   }
 
@@ -148,7 +150,7 @@ function update() {
 
 function spawn(note) {
 
-    //need to do this properly at some point
+    //fake cursor position in 3d scene here to save cycles as accuracy isn't important
 
     var x = ((MOUSE.e.clientX / window.innerWidth) - .5) * window.innerWidth;
     var y = ((MOUSE.e.clientY / window.innerHeight) - .5) * -window.innerHeight;
