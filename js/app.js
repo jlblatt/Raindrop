@@ -1,8 +1,8 @@
 var _USE_FULL_SOUNDFONT_LIBRARY = false; //set this variable to true after downloading https://github.com/gleitz/midi-js-soundfonts and placing in soundfont directory
 
 var FPS = {show: false, last: Date.now(), count: 0},
-    NOTE = {last: Date.now()},
-    MOUSE = {last: Date.now(), e: null};
+    NOTE = {last: Date.now(), next: Date.now()},
+    INPUT = {last: Date.now(), e: null};
 
 var SONGS = [
   {path: "midi/mellon-collie-and-the-infinite-sadness.mid", bpm: 86}
@@ -68,13 +68,14 @@ window.onload = function() {
 
     MIDI.Player.addListener(function(e) {
       NOTE.last = Date.now();
+
       if(e.message = 144) spawn(e);
       else if(e.message = 128) despawn(e);
     });
 
     function inputEvent(e) {
-      MOUSE.e = e;
-      MOUSE.last = Date.now();
+      INPUT.e = e;
+      INPUT.last = Date.now();
 
       if(!MIDI.Player.playing) {
         MIDI.Player.resume();
@@ -85,14 +86,14 @@ window.onload = function() {
 
     window.ontouchmove = function(e) {
       inputEvent(e);
-      MOUSE.e.clientX = e.touches[0].clientX;
-      MOUSE.e.clientY = e.touches[0].clientY;
+      INPUT.e.clientX = e.touches[0].clientX;
+      INPUT.e.clientY = e.touches[0].clientY;
     }
 
     window.onkeypress = function(e) {
       inputEvent(e);
-      MOUSE.e.clientX = Math.floor(Math.random() * window.innerWidth);
-      MOUSE.e.clientY = Math.floor(Math.random() * window.innerHeight);
+      INPUT.e.clientX = Math.floor(Math.random() * window.innerWidth);
+      INPUT.e.clientY = Math.floor(Math.random() * window.innerHeight);
       //return false;
     }
 
@@ -112,8 +113,14 @@ function loop() {
 
   //pause midi if mouse has been idle and there have bee notes recent enough
 
-  if(MIDI.Player.playing && (Date.now() - MOUSE.last) > (60000 / MIDI.Player.BPM) && NOTE.last > (MOUSE.last + (40000 / MIDI.Player.BPM))) {
+  if(MIDI.Player.playing && (Date.now() - INPUT.last) > (60000 / MIDI.Player.BPM) && NOTE.last > (INPUT.last + (60000 / MIDI.Player.BPM))) {
     MIDI.Player.pause();
+  }
+
+  //simulate click track events
+  if(MIDI.Player.playing && Date.now() > NOTE.next) {
+    NOTE.next = Date.now() + (60000 / (MIDI.Player.BPM * 2));
+    click();
   }
 
   //update our scene
@@ -152,8 +159,8 @@ function spawn(note) {
 
     //fake cursor position in 3d scene here to save cycles as accuracy isn't important
 
-    var x = ((MOUSE.e.clientX / window.innerWidth) - .5) * window.innerWidth;
-    var y = ((MOUSE.e.clientY / window.innerHeight) - .5) * -window.innerHeight;
+    var x = ((INPUT.e.clientX / window.innerWidth) - .5) * window.innerWidth;
+    var y = ((INPUT.e.clientY / window.innerHeight) - .5) * -window.innerHeight;
 
     if(note.channel == 0) {
       var size = (note.velocity + note.note) * Math.random() * 2;
@@ -277,5 +284,13 @@ function spawn(note) {
 ////////////////////////////////
 
 function despawn(e) {
+
+}
+
+////////////////////////////////
+// CLICKS
+////////////////////////////////
+
+function click() {
 
 }
