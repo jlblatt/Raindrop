@@ -1,10 +1,10 @@
 var _USE_FULL_SOUNDFONT_LIBRARY = false; //set this variable to true after downloading https://github.com/gleitz/midi-js-soundfonts and placing in soundfont directory
 
-var FPS = {last: Date.now(), count: 0},
+var FPS = {show: false, last: Date.now(), count: 0},
     MOUSE = {last: Date.now(), e: null};
 
 var SONGS = [
-  {path: "midi/mcis.mid", bpm: 86, instruments: ["acoustic_grand_piano", "cello", "reed_organ", "clarinet"]}
+  {path: "midi/mellon-collie-and-the-infinite-sadness.mid", bpm: 86}
 ];
 
 var SCENE, CAMERA, RENDERER;
@@ -25,71 +25,91 @@ window.onload = function() {
   RENDERER = new THREE.WebGLRenderer();
   RENDERER.setSize(window.innerWidth, window.innerHeight);
 
-  document.body.appendChild( RENDERER.domElement );
+  document.body.appendChild(RENDERER.domElement);
 
   //init MIDI.js
 
   var song = SONGS[Math.floor(Math.random() * SONGS.length)];
-
-  function playerSetup() {
-    MIDI.Player.BPM = song.bpm;
-
-    if(_USE_FULL_SOUNDFONT_LIBRARY) {
-      for(var i = 0; i < song.instruments.length; i++) {
-        MIDI.programChange(i, MIDI.GM.byName[song.instruments[i]].number);
-      }
-    }
-
-    MIDI.Player.addListener(function(e) {
-      //console.log(e.channel + ' / ' + e.note + ' / ' + e.velocity);
-      if(e.message = 144) spawn(e);
-      else if(e.message = 128) despawn(e);
-		});
-
-    MIDI.Player.loadFile(song.path, function() {
-
-      //init user input and run the animation after file loads
-
-      window.onmousemove = function(e) {
-        MOUSE.e = e;
-        MOUSE.last = Date.now();
-
-        if(!MIDI.Player.playing) {
-          MIDI.Player.resume();
-        }
-      }
-
-      window.onkeypress = function(e) {
-        MOUSE.e = e;
-        MOUSE.e.clientX = Math.floor(Math.random() * window.innerWidth);
-        MOUSE.e.clientY = Math.floor(Math.random() * window.innerHeight);
-        MOUSE.last = Date.now();
-
-        if(!MIDI.Player.playing) {
-          MIDI.Player.resume();
-        }
-
-        return false;
-      }
-
-      //skip ahead to test
-      //MIDI.Player.currentTime = 60000;
-
-      loop();
-
-    });
-  }
 
   var opts = {
     soundfontUrl: "soundfont/",
     onsuccess: playerSetup
   };
 
-  if(_USE_FULL_SOUNDFONT_LIBRARY) opts.instruments = song.instruments;
-
   MIDI.loadPlugin(opts);
 
-}
+  function playerSetup() {
+
+    MIDI.Player.BPM = song.bpm;
+
+    MIDI.Player.addListener(function(e) {
+      if(e.message = 144) spawn(e);
+      else if(e.message = 128) despawn(e);
+		});
+
+    MIDI.Player.loadFile(song.path, function() {
+
+      //if we are using the full soundfont library, load the instruments needed for this song
+
+      if(_USE_FULL_SOUNDFONT_LIBRARY) {
+        var instruments = MIDI.Player.getFileInstruments();
+        var instrumentsToLoad = instruments.length;
+        for(let i = 0; i < instruments.length; i++) {
+          var channel = Math.random();
+          MIDI.loadResource({
+            instrument: instruments[i],
+            onsuccess: function() {
+              MIDI.programChange(i, MIDI.GM.byName[instruments[i]].number);
+              instrumentsToLoad--;
+              if(instrumentsToLoad == 0) appReady();
+            }
+          });
+        }
+      }
+
+      else appReady();
+
+      //init user input and run the animation after file (and possibly all instruments) load
+
+      function appReady() {
+
+        function inputEvent(e) {
+          MOUSE.e = e;
+          MOUSE.last = Date.now();
+
+          if(!MIDI.Player.playing) {
+            MIDI.Player.resume();
+          }
+        }
+
+        window.onmousemove = inputEvent;
+
+        window.ontouchmove = function(e) {
+          inputEvent(e);
+          MOUSE.e.clientX = Math.floor(Math.random() * window.innerWidth);
+          MOUSE.e.clientY = Math.floor(Math.random() * window.innerHeight);
+        }
+
+        window.onkeypress = function(e) {
+          inputEvent(e);
+          MOUSE.e.clientX = Math.floor(Math.random() * window.innerWidth);
+          MOUSE.e.clientY = Math.floor(Math.random() * window.innerHeight);
+          //return false;
+        }
+
+        //skip ahead to test
+        MIDI.Player.currentTime = 60000;
+
+        //MIDI.Player.setAnimation(loop);
+        loop();
+
+      } //appReady();
+
+    }); //MIDI.Player.loadFile();
+
+  } //playerSetup
+
+} //window.onload();
 
 ////////////////////////////////
 // MAIN LOOP
@@ -115,11 +135,11 @@ function loop() {
 
   //fps
 
-  if(Date.now() - FPS.last > 1000) {
-    //console.log(FPS.count);
+  if(FPS.show && Date.now() - FPS.last > 1000) {
+    console.log(FPS.count);
     FPS.count = 0;
     FPS.last = Date.now();
-  } else {
+  } else if(FPS.show) {
     FPS.count++;
   }
 
