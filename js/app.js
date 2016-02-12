@@ -4,8 +4,16 @@ var FPS = {show: false, last: Date.now(), count: 0},
     NOTE = {last: Date.now(), next: Date.now()},
     INPUT = {last: Date.now(), e: null};
 
-var SONGS = [
-  {path: "midi/mellon-collie-and-the-infinite-sadness.mid", bpm: 86}
+var EFFECTS = {};
+
+var SONG = [
+  {
+    path: "midi/mellon-collie-and-the-infinite-sadness.mid",
+    bpm: 86,
+    effectMapping: {
+      channels: ['test', 'test', 'test', 'test']
+    }
+  }
 ];
 
 var SCENE, CAMERA, RENDERER;
@@ -28,15 +36,24 @@ window.onload = function() {
 
   document.body.appendChild(RENDERER.domElement);
 
+  //setup song and effect mapping
+
+  SONG = SONG[Math.floor(Math.random() * SONG.length)];
+
+  for(var i = 0; i < SONG.effectMapping.channels.length; i++) {
+    if(EFFECTS.hasOwnProperty(SONG.effectMapping.channels[i])) {
+      SONG.effectMapping.channels[i] = EFFECTS[SONG.effectMapping.channels[i]];
+    }
+  }
+
   //init MIDI.js
 
-  var song = SONGS[Math.floor(Math.random() * SONGS.length)];
-  MIDI.Player.BPM = song.bpm ? song.bpm : 100;
+  MIDI.Player.BPM = SONG.bpm ? SONG.bpm : 100;
 
   MIDI.loadPlugin({
     soundfontUrl: "soundfont/",
     onsuccess: function() {
-      MIDI.Player.loadFile(song.path, function() {
+      MIDI.Player.loadFile(SONG.path, function() {
 
         //if we are using the full soundfont library, load the instruments needed for this song
 
@@ -68,9 +85,14 @@ window.onload = function() {
 
     MIDI.Player.addListener(function(e) {
       NOTE.last = Date.now();
-
-      if(e.message = 144) spawn(e);
-      else if(e.message = 128) despawn(e);
+      var eMap = SONG.effectMapping.channels;
+      if(eMap.length > e.channel && eMap[e.channel]) {
+        if(e.message == 144 && eMap[e.channel].hasOwnProperty('spawn')) {
+          eMap[e.channel].spawn(e);
+        } else if(e.message == 128 && eMap[e.channel].hasOwnProperty('despawn')) {
+          eMap[e.channel].despawn(e);
+        }
+      }
     });
 
     function inputEvent(e) {
@@ -79,6 +101,12 @@ window.onload = function() {
 
       if(!MIDI.Player.playing) {
         MIDI.Player.resume();
+      }
+
+      for(var i = 0; i < SONG.effectMapping.channels.length; i++) {
+        if(SONG.effectMapping.channels[i] && SONG.effectMapping.channels[i].hasOwnProperty('input')) {
+          SONG.effectMapping.channels[i].input(e);
+        }
       }
     }
 
@@ -120,12 +148,19 @@ function loop() {
   //simulate click track events
   if(MIDI.Player.playing && Date.now() > NOTE.next) {
     NOTE.next = Date.now() + (60000 / (MIDI.Player.BPM * 2));
-    click();
+    for(var i = 0; i < SONG.effectMapping.channels.length; i++) {
+      if(SONG.effectMapping.channels[i] && SONG.effectMapping.channels[i].hasOwnProperty('click')) {
+        SONG.effectMapping.channels[i].click();
+      }
+    }
   }
 
-  //update our scene
-
-  update();
+  //dispatch tick events
+  for(var i = 0; i < SONG.effectMapping.channels.length; i++) {
+    if(SONG.effectMapping.channels[i] && SONG.effectMapping.channels[i].hasOwnProperty('tick')) {
+      SONG.effectMapping.channels[i].tick();
+    }
+  }
 
   //render
 
@@ -140,157 +175,5 @@ function loop() {
   } else if(FPS.show) {
     FPS.count++;
   }
-
-}
-
-////////////////////////////////
-// SCENE UPDATE
-////////////////////////////////
-
-function update() {
-
-}
-
-////////////////////////////////
-// NOTE HITS
-////////////////////////////////
-
-function spawn(note) {
-
-    //fake cursor position in 3d scene here to save cycles as accuracy isn't important
-
-    var x = ((INPUT.e.clientX / window.innerWidth) - .5) * window.innerWidth;
-    var y = ((INPUT.e.clientY / window.innerHeight) - .5) * -window.innerHeight;
-
-    if(note.channel == 0) {
-      var size = (note.velocity + note.note) * Math.random() * 2;
-      var b = Math.floor(192 + (Math.random() * 64));
-      var r = b - 64;
-      var g = b - 64;
-      var opacity = .70 + (Math.random() * .2);
-
-      var material = new THREE.MeshBasicMaterial({color: "rgb(" + r + ", " + g + ", " + b + ")", transparent: true, opacity: opacity});
-      var geometry = new THREE.CircleGeometry(size, 72);
-      geometry.translate(x, y, 0);
-      var mesh = new THREE.Mesh(geometry, material);
-
-      SCENE.add(mesh);
-
-      function drop(mesh) {
-        mesh.material.opacity -= .0125;
-        if(mesh.material.opacity < 0) {
-          SCENE.remove(mesh);
-        } else {
-          setTimeout(function(){
-            drop(mesh);
-          }, 16);
-        }
-      }
-
-      drop(mesh);
-    }
-
-    else if(note.channel == 1) {
-      var size = (note.velocity + note.note) * Math.random() * 4;
-      var r = Math.floor(128 + (Math.random() * 128));
-      var g = r - 64;
-      var b = r - 64;
-      var opacity = .40 + (Math.random() * .2);
-
-      var material = new THREE.MeshBasicMaterial({color: "rgb(" + r + ", " + g + ", " + b + ")", transparent: true, opacity: opacity, wireframe: true});
-      var geometry = new THREE.CircleGeometry(size, 24);
-      var mesh = new THREE.Mesh(geometry, material);
-
-      SCENE.add(mesh);
-
-      function drop(mesh) {
-        mesh.material.opacity -= .003;
-        mesh.rotation.z -= .03;
-        if(mesh.material.opacity < 0) {
-          SCENE.remove(mesh);
-        } else {
-          setTimeout(function(){
-            drop(mesh);
-          }, 16);
-        }
-      }
-
-      drop(mesh);
-    }
-
-    else if(note.channel == 2){
-      var size = (note.velocity + note.note) * Math.random() * 3;
-      var g = Math.floor(128 + (Math.random() * 128));
-      var r = g - 64;
-      var b = g - 64;
-      var opacity = .40 + (Math.random() * .2);
-
-      var material = new THREE.MeshBasicMaterial({color: "rgb(" + r + ", " + g + ", " + b + ")", transparent: true, opacity: opacity, wireframe: true});
-      var geometry = new THREE.CircleGeometry(size, 36);
-      geometry.translate(x, y, 0);
-      var mesh = new THREE.Mesh(geometry, material);
-
-      SCENE.add(mesh);
-
-      function drop(mesh) {
-        mesh.material.opacity -= .003;
-        mesh.rotation.z += .03;
-        if(mesh.material.opacity < 0) {
-          SCENE.remove(mesh);
-        } else {
-          setTimeout(function(){
-            drop(mesh);
-          }, 16);
-        }
-      }
-
-      drop(mesh);
-    }
-
-    else {
-      var size = (note.velocity + note.note) * Math.random();
-      var g = Math.floor(128 + (Math.random() * 128));
-      var r = g;
-      var b = g - 64;
-      var opacity = .80 + (Math.random() * .2);
-
-      var material = new THREE.MeshBasicMaterial({color: "rgb(" + r + ", " + g + ", " + b + ")", transparent: true, opacity: opacity});
-      var geometry = new THREE.CircleGeometry(size, 36);
-      geometry.translate(x, y, 0);
-      var mesh = new THREE.Mesh(geometry, material);
-
-      SCENE.add(mesh);
-
-      function drop(mesh) {
-        mesh.material.opacity -= .002;
-        mesh.scale.x += .01;
-        mesh.scale.y += .01;
-        if(mesh.material.opacity < 0) {
-          SCENE.remove(mesh);
-        } else {
-          setTimeout(function(){
-            drop(mesh);
-          }, 16);
-        }
-      }
-
-      drop(mesh);
-    }
-
-}
-
-////////////////////////////////
-// NOTE RELEASES
-////////////////////////////////
-
-function despawn(e) {
-
-}
-
-////////////////////////////////
-// CLICKS
-////////////////////////////////
-
-function click() {
 
 }
