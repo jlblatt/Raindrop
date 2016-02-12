@@ -20,7 +20,7 @@ window.onload = function() {
   SCENE = new THREE.Scene();
 
   CAMERA = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 10000);
-  CAMERA.position.z = 650;
+  CAMERA.position.z = 600;
 
   RENDERER = new THREE.WebGLRenderer();
   RENDERER.setSize(window.innerWidth, window.innerHeight);
@@ -30,86 +30,75 @@ window.onload = function() {
   //init MIDI.js
 
   var song = SONGS[Math.floor(Math.random() * SONGS.length)];
+  if(song.bpm) MIDI.Player.BPM = song.bpm;
 
-  var opts = {
+  MIDI.loadPlugin({
     soundfontUrl: "soundfont/",
-    onsuccess: playerSetup
-  };
+    onsuccess: function() {
+      MIDI.Player.loadFile(song.path, function() {
 
-  MIDI.loadPlugin(opts);
+        //if we are using the full soundfont library, load the instruments needed for this song
 
-  function playerSetup() {
+        if(_USE_FULL_SOUNDFONT_LIBRARY) {
+          var instruments = MIDI.Player.getFileInstruments();
+          var instrumentsToLoad = instruments.length;
+          for(let i = 0; i < instruments.length; i++) {
+            var channel = Math.random();
+            MIDI.loadResource({
+              instrument: instruments[i],
+              onsuccess: function() {
+                MIDI.programChange(i, MIDI.GM.byName[instruments[i]].number);
+                instrumentsToLoad--;
+                if(instrumentsToLoad == 0) appReady();
+              }
+            });
+          }
+        }
 
-    MIDI.Player.BPM = song.bpm;
+        else appReady();
+
+      });
+    }
+  });
+
+  //init user/midi input and run the animation after file (and possibly all instruments) load
+
+  function appReady() {
 
     MIDI.Player.addListener(function(e) {
       if(e.message = 144) spawn(e);
       else if(e.message = 128) despawn(e);
-		});
+    });
 
-    MIDI.Player.loadFile(song.path, function() {
+    function inputEvent(e) {
+      MOUSE.e = e;
+      MOUSE.last = Date.now();
 
-      //if we are using the full soundfont library, load the instruments needed for this song
-
-      if(_USE_FULL_SOUNDFONT_LIBRARY) {
-        var instruments = MIDI.Player.getFileInstruments();
-        var instrumentsToLoad = instruments.length;
-        for(let i = 0; i < instruments.length; i++) {
-          var channel = Math.random();
-          MIDI.loadResource({
-            instrument: instruments[i],
-            onsuccess: function() {
-              MIDI.programChange(i, MIDI.GM.byName[instruments[i]].number);
-              instrumentsToLoad--;
-              if(instrumentsToLoad == 0) appReady();
-            }
-          });
-        }
+      if(!MIDI.Player.playing) {
+        MIDI.Player.resume();
       }
+    }
 
-      else appReady();
+    window.onmousemove = inputEvent;
 
-      //init user input and run the animation after file (and possibly all instruments) load
+    window.ontouchmove = function(e) {
+      inputEvent(e);
+      MOUSE.e.clientX = e.touches[0].clientX;
+      MOUSE.e.clientY = e.touches[0].clientY;
+    }
 
-      function appReady() {
+    window.onkeypress = function(e) {
+      inputEvent(e);
+      MOUSE.e.clientX = Math.floor(Math.random() * window.innerWidth);
+      MOUSE.e.clientY = Math.floor(Math.random() * window.innerHeight);
+      //return false;
+    }
 
-        function inputEvent(e) {
-          MOUSE.e = e;
-          MOUSE.last = Date.now();
+    loop();
 
-          if(!MIDI.Player.playing) {
-            MIDI.Player.resume();
-          }
-        }
+  }
 
-        window.onmousemove = inputEvent;
-
-        window.ontouchmove = function(e) {
-          inputEvent(e);
-          MOUSE.e.clientX = Math.floor(Math.random() * window.innerWidth);
-          MOUSE.e.clientY = Math.floor(Math.random() * window.innerHeight);
-        }
-
-        window.onkeypress = function(e) {
-          inputEvent(e);
-          MOUSE.e.clientX = Math.floor(Math.random() * window.innerWidth);
-          MOUSE.e.clientY = Math.floor(Math.random() * window.innerHeight);
-          //return false;
-        }
-
-        //skip ahead to test
-        MIDI.Player.currentTime = 60000;
-
-        //MIDI.Player.setAnimation(loop);
-        loop();
-
-      } //appReady();
-
-    }); //MIDI.Player.loadFile();
-
-  } //playerSetup
-
-} //window.onload();
+}
 
 ////////////////////////////////
 // MAIN LOOP
