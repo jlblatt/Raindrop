@@ -1,5 +1,9 @@
 EFFECTS['test'] = {
 
+  vars: {
+    last: [Date.now(), Date.now(), Date.now(), Date.now()]
+  },
+
   spawn: function(note) {
 
     //fake cursor position in 3d scene here to save cycles as accuracy isn't important
@@ -7,7 +11,10 @@ EFFECTS['test'] = {
     var x = ((INPUT.e.clientX / window.innerWidth) - .5) * window.innerWidth;
     var y = ((INPUT.e.clientY / window.innerHeight) - .5) * -window.innerHeight;
 
-    if(note.channel == 0) {
+
+
+    if(note.channel == 0 && Date.now() - this.vars.last[0] > (SONG.bpm / 8)) {
+      this.vars.last[0] = Date.now();
       var size = (note.velocity + note.note) * Math.random() * 2;
       var b = Math.floor(192 + (Math.random() * 64));
       var r = b - 64;
@@ -92,7 +99,7 @@ EFFECTS['test'] = {
       drop(mesh);
     }
 
-    else {
+    else if(note.channel == 3) {
       var size = (note.velocity + note.note) * Math.random();
       var g = Math.floor(128 + (Math.random() * 128));
       var r = g;
@@ -128,7 +135,7 @@ EFFECTS['test'] = {
   },
 
   click: function() {
-    
+
   },
 
   input: function() {
