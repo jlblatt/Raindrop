@@ -6,13 +6,6 @@ EFFECTS['test'] = {
 
   spawn: function(note) {
 
-    //fake cursor position in 3d scene here to save cycles as accuracy isn't important
-
-    var x = ((INPUT.e.clientX / window.innerWidth) - .5) * window.innerWidth;
-    var y = ((INPUT.e.clientY / window.innerHeight) - .5) * -window.innerHeight;
-
-
-
     if(note.channel == 0 && Date.now() - this.vars.last[0] > (SONG.bpm / 8)) {
       this.vars.last[0] = Date.now();
       var size = (note.velocity + note.note) * Math.random() * 2;
@@ -23,7 +16,7 @@ EFFECTS['test'] = {
 
       var material = new THREE.MeshBasicMaterial({color: "rgb(" + r + ", " + g + ", " + b + ")", transparent: true, opacity: opacity});
       var geometry = new THREE.CircleGeometry(size, 72);
-      geometry.translate(x, y, 0);
+      geometry.translate(INPUT.x, INPUT.y, 0);
       var mesh = new THREE.Mesh(geometry, material);
 
       SCENE.add(mesh);
@@ -79,7 +72,7 @@ EFFECTS['test'] = {
 
       var material = new THREE.MeshBasicMaterial({color: "rgb(" + r + ", " + g + ", " + b + ")", transparent: true, opacity: opacity, wireframe: true});
       var geometry = new THREE.CircleGeometry(size, 36);
-      geometry.translate(x, y, 0);
+      geometry.translate(INPUT.x, INPUT.y, 0);
       var mesh = new THREE.Mesh(geometry, material);
 
       SCENE.add(mesh);
@@ -108,7 +101,7 @@ EFFECTS['test'] = {
 
       var material = new THREE.MeshBasicMaterial({color: "rgb(" + r + ", " + g + ", " + b + ")", transparent: true, opacity: opacity});
       var geometry = new THREE.CircleGeometry(size, 36);
-      geometry.translate(x, y, 0);
+      geometry.translate(INPUT.x, INPUT.y, 0);
       var mesh = new THREE.Mesh(geometry, material);
 
       SCENE.add(mesh);

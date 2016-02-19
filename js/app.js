@@ -2,7 +2,7 @@ var _USE_FULL_SOUNDFONT_LIBRARY = false; //set this variable to true after downl
 
 var FPS = {show: false, last: Date.now(), count: 0},
     NOTE = {last: Date.now(), next: Date.now()},
-    INPUT = {last: Date.now(), e: null};
+    INPUT = {last: Date.now(), e: null, x: null, y: null};
 
 var EFFECTS = {};
 
@@ -11,7 +11,7 @@ var SONG = [
     path: "midi/mellon-collie-and-the-infinite-sadness.mid",
     bpm: 86,
     effectMapping: {
-      globals: ['test'],
+      globals: ['basic_raindrop'],
       channels: []
     }
   }
@@ -115,6 +115,8 @@ window.onload = function() {
     });
 
     function inputEvent(e) {
+      INPUT.x = ((e.clientX / window.innerWidth) - .5) * window.innerWidth;
+      INPUT.y = ((e.clientY / window.innerHeight) - .5) * -window.innerHeight;
       INPUT.e = e;
       INPUT.last = Date.now();
 
@@ -138,15 +140,15 @@ window.onload = function() {
     window.onmousemove = inputEvent;
 
     window.ontouchmove = function(e) {
+      e.clientX = e.touches[0].clientX;
+      e.clientY = e.touches[0].clientY;
       inputEvent(e);
-      INPUT.e.clientX = e.touches[0].clientX;
-      INPUT.e.clientY = e.touches[0].clientY;
     }
 
     window.onkeypress = function(e) {
+      e.clientX = Math.floor(Math.random() * window.innerWidth);
+      e.clientY = Math.floor(Math.random() * window.innerHeight);
       inputEvent(e);
-      INPUT.e.clientX = Math.floor(Math.random() * window.innerWidth);
-      INPUT.e.clientY = Math.floor(Math.random() * window.innerHeight);
       //return false;
     }
 
