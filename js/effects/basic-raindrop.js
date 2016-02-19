@@ -11,7 +11,6 @@ EFFECTS['basic_raindrop'] = {
     mesh.position.x = INPUT.x;
     mesh.position.y = INPUT.y;
 
-    //mesh.growAmt = Math.random();
     mesh.growAmt = .4;
 
     SCENE.add(mesh);

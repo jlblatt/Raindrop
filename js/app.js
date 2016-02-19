@@ -11,7 +11,7 @@ var SONG = [
     path: "midi/mellon-collie-and-the-infinite-sadness.mid",
     bpm: 86,
     effectMapping: {
-      globals: ['basic_raindrop'],
+      globals: ['gravity_petals'],
       channels: []
     }
   }
