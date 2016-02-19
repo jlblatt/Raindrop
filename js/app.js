@@ -2,7 +2,7 @@ var _USE_FULL_SOUNDFONT_LIBRARY = false; //set this variable to true after downl
 
 var FPS = {show: false, last: Date.now(), count: 0},
     NOTE = {last: Date.now(), next: Date.now()},
-    INPUT = {last: Date.now(), e: null, x: null, y: null};
+    INPUT = {last: Date.now(), e: null, x: null, y: null, cursor: null};
 
 var EFFECTS = {};
 
@@ -36,6 +36,13 @@ window.onload = function() {
   RENDERER.setSize(window.innerWidth, window.innerHeight);
 
   document.body.appendChild(RENDERER.domElement);
+
+  //setup cursor
+
+  var c_mat = new THREE.MeshBasicMaterial({color: 0xdddddd});
+  var c_geo = new THREE.CircleGeometry(1, 24);
+  INPUT.cursor = new THREE.Mesh(c_geo, c_mat);
+  SCENE.add(INPUT.cursor);
 
   //setup song and effect mapping
 
@@ -117,8 +124,11 @@ window.onload = function() {
     function inputEvent(e) {
       INPUT.x = ((e.clientX / window.innerWidth) - .5) * window.innerWidth;
       INPUT.y = ((e.clientY / window.innerHeight) - .5) * -window.innerHeight;
+      INPUT.cursor.position.x = INPUT.x;
+      INPUT.cursor.position.y = INPUT.y;
       INPUT.e = e;
       INPUT.last = Date.now();
+
 
       if(!MIDI.Player.playing) {
         MIDI.Player.resume();
