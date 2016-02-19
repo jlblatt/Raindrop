@@ -1,24 +1,21 @@
 EFFECTS['basic_raindrop'] = {
 
-
   DROPS: [],
-
 
   spawn: function(note) {
 
-    //var color = MIDI.Synesthesia.map('Alexander Scriabin (1911)')[note.note];
-    //var material = new THREE.MeshBasicMaterial({color: color.hsl, transparent: true, opacity: 1});
     var material = new THREE.MeshBasicMaterial({color: 0xccccff, transparent: true, opacity: 1});
-    var geometry = new THREE.RingGeometry(5, 5.25, 96, 1);
+    var geometry = new THREE.RingGeometry(5, 5.15, 96, 1);
     var mesh = new THREE.Mesh(geometry, material);
 
     mesh.position.x = INPUT.x;
     mesh.position.y = INPUT.y;
 
-    mesh.growAmt = .5;
+    //mesh.growAmt = Math.random();
+    mesh.growAmt = .4;
 
     SCENE.add(mesh);
-    this.vars.DROPS.push(mesh);
+    this.DROPS.push(mesh);
 
   }, //spawn
 
@@ -50,7 +47,7 @@ EFFECTS['basic_raindrop'] = {
         SCENE.remove(d);
         this.DROPS.splice(i, 1);
       }
-      
+
     }
 
   } //tick
