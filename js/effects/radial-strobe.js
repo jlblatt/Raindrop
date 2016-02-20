@@ -20,13 +20,13 @@ EFFECTS['radial_strobe'] = {
     //if(this.SKIP = !this.SKIP) return;
 
     var material = new THREE.MeshBasicMaterial({color: 0xffffff, transparent: true, opacity: 1});
-    var geometry = new THREE.RingGeometry(6, 8, 96, 1);
+    var geometry = new THREE.RingGeometry(5, 6, 96, 1);
     var mesh = new THREE.Mesh(geometry, material);
 
     mesh.position.x = INPUT.x;
     mesh.position.y = INPUT.y;
 
-    mesh.growAmt = 6;
+    mesh.growAmt = 4;
 
     SCENE.add(mesh);
     this.CLICKS.push(mesh);
@@ -43,7 +43,7 @@ EFFECTS['radial_strobe'] = {
 
       var d = this.CLICKS[i];
 
-      d.material.opacity -= MIDI.Player.BPM / 2000;
+      d.material.opacity -= MIDI.Player.BPM / 1000;
       d.scale.x += d.growAmt;
       d.scale.y += d.growAmt;
 
@@ -54,7 +54,7 @@ EFFECTS['radial_strobe'] = {
 
     }
 
-  } //tick
+  }, //tick
 
   randomize: function() {
 
