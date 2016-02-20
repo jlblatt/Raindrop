@@ -1,11 +1,14 @@
 EFFECTS['radial_strobe'] = {
 
   SETTINGS: {
-
+    innerRadius: 5,
+    outerRadius: 6.5,
+    segments: 96,
+    growSpeed: 12,
+    fadeSpeed: 1000
   },
 
   CLICKS: [],
-  SKIP: false,
 
   spawn: function(note) {
 
@@ -17,19 +20,18 @@ EFFECTS['radial_strobe'] = {
 
   click: function() {
 
-    //if(this.SKIP = !this.SKIP) return;
-
     var material = new THREE.MeshBasicMaterial({color: 0xffffff, transparent: true, opacity: 1});
-    var geometry = new THREE.RingGeometry(5, 6.5, 96, 1);
+    var geometry = new THREE.RingGeometry(this.SETTINGS.innerRadius, this.SETTINGS.outerRadius, this.SETTINGS.segments, 1);
     var mesh = new THREE.Mesh(geometry, material);
 
     mesh.position.x = INPUT.x;
     mesh.position.y = INPUT.y;
 
-    mesh.growAmt = 12;
+    mesh.growSpeed = this.SETTINGS.growSpeed;
 
     SCENE.add(mesh);
     this.CLICKS.push(mesh);
+
   }, //click
 
   input: function() {
@@ -43,9 +45,9 @@ EFFECTS['radial_strobe'] = {
 
       var d = this.CLICKS[i];
 
-      d.material.opacity -= MIDI.Player.BPM / 1000;
-      d.scale.x += d.growAmt;
-      d.scale.y += d.growAmt;
+      d.material.opacity -= MIDI.Player.BPM / this.SETTINGS.fadeSpeed;
+      d.scale.x += d.growSpeed;
+      d.scale.y += d.growSpeed;
 
       if(d.material.opacity < 0) {
         SCENE.remove(d);
@@ -57,7 +59,20 @@ EFFECTS['radial_strobe'] = {
   }, //tick
 
   randomize: function() {
+    this.SETTINGS.innerRadius = 2 + (0.5 * Math.floor(Math.random() * 8 / 0.5));
+    this.SETTINGS.outerRadius = 3 + (0.5 * Math.floor(Math.random() * 9 / 0.5));
+    this.SETTINGS.segments = Math.random() < 0.25 ? 96: Math.floor(Math.random() * 20);
+    this.SETTINGS.growSpeed = 4 + Math.floor(Math.random() * 10);
+    this.SETTINGS.fadeSpeed = 500 + Math.floor(Math.random() * 1000);
 
-  }
+    if(this.SETTINGS.innerRadius > this.SETTINGS.outerRadius) {
+      var tmp = this.SETTINGS.innerRadius;
+      this.SETTINGS.innerRadius = this.SETTINGS.outerRadius;
+      this.SETTINGS.outerRadius = tmp;
+    }
+    else if(this.SETTINGS.innerRadius == this.SETTINGS.outerRadius) {
+      this.SETTINGS.outerRadius += 1;
+    }
+  } //randomize
 
 };

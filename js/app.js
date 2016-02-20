@@ -122,8 +122,8 @@ window.onload = function() {
     });
 
     function inputEvent(e) {
-      INPUT.x = ((e.clientX / window.innerWidth) - .5) * window.innerWidth;
-      INPUT.y = ((e.clientY / window.innerHeight) - .5) * -window.innerHeight;
+      INPUT.x = ((e.clientX / window.innerWidth) - 0.5) * window.innerWidth;
+      INPUT.y = ((e.clientY / window.innerHeight) - 0.5) * -window.innerHeight;
       INPUT.cursor.position.x = INPUT.x;
       INPUT.cursor.position.y = INPUT.y;
       INPUT.e = e;
@@ -168,7 +168,24 @@ window.onload = function() {
       e.clientX = Math.floor(Math.random() * window.innerWidth);
       e.clientY = Math.floor(Math.random() * window.innerHeight);
       inputEvent(e);
+
+      if(e.which == 32) {
+        //dispatch randomize events
+        for(var i = 0; i < SONG.effectMapping.channels.length; i++) {
+          if(SONG.effectMapping.channels[i] && SONG.effectMapping.channels[i].hasOwnProperty('randomize')) {
+            SONG.effectMapping.channels[i].randomize();
+          }
+        }
+
+        for(var i = 0; i < SONG.effectMapping.globals.length; i++) {
+          if(SONG.effectMapping.globals[i] && SONG.effectMapping.globals[i].hasOwnProperty('randomize')) {
+            SONG.effectMapping.globals[i].randomize();
+          }
+        }
+      }
+
       //return false;
+
     }
 
     loop();
