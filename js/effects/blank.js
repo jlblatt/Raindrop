@@ -18,6 +18,10 @@ EFFECTS['blank'] = {
 
   tick: function() {
 
+  },
+
+  randomize: function() {
+
   }
 
 };

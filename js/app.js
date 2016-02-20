@@ -6,12 +6,12 @@ var FPS = {show: false, last: Date.now(), count: 0},
 
 var EFFECTS = {};
 
-var SONG = [
+var SONG, SONGS = [
   {
     path: "midi/mellon-collie-and-the-infinite-sadness.mid",
     bpm: 86,
     effectMapping: {
-      globals: ['gravity_petals'],
+      globals: ['radial_strobe'],
       channels: []
     }
   }
@@ -46,7 +46,7 @@ window.onload = function() {
 
   //setup song and effect mapping
 
-  SONG = SONG[Math.floor(Math.random() * SONG.length)];
+  SONG = SONGS[Math.floor(Math.random() * SONGS.length)];
 
   if(!SONG.effectMapping.hasOwnProperty('channels')) SONG.effectMapping.channels = [];
   if(!SONG.effectMapping.hasOwnProperty('globals')) SONG.effectMapping.globals = [];
@@ -176,15 +176,15 @@ function loop() {
 
   requestAnimationFrame(loop);
 
-  //pause midi if mouse has been idle and there have bee notes recent enough
+  //pause midi if mouse has been idle and there have been notes recent enough
 
   if(MIDI.Player.playing && (Date.now() - INPUT.last) > (60000 / MIDI.Player.BPM) && NOTE.last > (INPUT.last + (60000 / MIDI.Player.BPM))) {
     MIDI.Player.pause();
   }
 
-  //simulate click track events
+  //simulate click track events (32nd notes in 4/4)
   if(MIDI.Player.playing && Date.now() > NOTE.next) {
-    NOTE.next = Date.now() + (60000 / (MIDI.Player.BPM * 2));
+    NOTE.next = Date.now() + (60000 / (MIDI.Player.BPM * 8));
 
     for(var i = 0; i < SONG.effectMapping.channels.length; i++) {
       if(SONG.effectMapping.channels[i] && SONG.effectMapping.channels[i].hasOwnProperty('click')) {
