@@ -20,13 +20,13 @@ EFFECTS['radial_strobe'] = {
     //if(this.SKIP = !this.SKIP) return;
 
     var material = new THREE.MeshBasicMaterial({color: 0xffffff, transparent: true, opacity: 1});
-    var geometry = new THREE.RingGeometry(5, 6, 96, 1);
+    var geometry = new THREE.RingGeometry(5, 6.5, 96, 1);
     var mesh = new THREE.Mesh(geometry, material);
 
     mesh.position.x = INPUT.x;
     mesh.position.y = INPUT.y;
 
-    mesh.growAmt = 4;
+    mesh.growAmt = 12;
 
     SCENE.add(mesh);
     this.CLICKS.push(mesh);

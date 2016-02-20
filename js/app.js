@@ -2,7 +2,7 @@ var _USE_FULL_SOUNDFONT_LIBRARY = false; //set this variable to true after downl
 
 var FPS = {show: false, last: Date.now(), count: 0},
     NOTE = {last: Date.now(), next: Date.now()},
-    INPUT = {last: Date.now(), e: null, x: null, y: null, cursor: null};
+    INPUT = {last: Date.now(), e: null, x: null, y: null, mousedown: false, cursor: null};
 
 var EFFECTS = {};
 
@@ -149,6 +149,15 @@ window.onload = function() {
 
     window.onmousemove = inputEvent;
 
+    window.onmousedown = function(e) {
+      INPUT.mousedown = true;
+      inputEvent(e);
+    }
+
+    window.onmouseup = function(e) {
+      INPUT.mousedown = false;
+    }
+
     window.ontouchmove = function(e) {
       e.clientX = e.touches[0].clientX;
       e.clientY = e.touches[0].clientY;
@@ -178,7 +187,7 @@ function loop() {
 
   //pause midi if mouse has been idle and there have been notes recent enough
 
-  if(MIDI.Player.playing && (Date.now() - INPUT.last) > (60000 / MIDI.Player.BPM) && NOTE.last > (INPUT.last + (60000 / MIDI.Player.BPM))) {
+  if(MIDI.Player.playing && !INPUT.mousedown && (Date.now() - INPUT.last) > (60000 / MIDI.Player.BPM) && NOTE.last > (INPUT.last + (60000 / MIDI.Player.BPM))) {
     MIDI.Player.pause();
   }
 
