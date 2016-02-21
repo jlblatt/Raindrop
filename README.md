@@ -14,17 +14,11 @@ The result is a much simpler visualizer than most (I'm a web developer, not a gr
 
 Move your mouse around.  Hold your mouse down.  Press any/all keys on your keyboard (space will randomize some effects).  Pretend like you are playing a piano (especially with Mellon Collie).  Have fun :)
 
-## This exists because these exist:
-
-- [MIDI.js](https://github.com/mudcube/MIDI.js)
-- [three.js](https://github.com/mrdoob/three.js/)
-- [MIDI.js Soundfonts](https://github.com/gleitz/midi-js-soundfonts)
-
-##### Song Credits
+#### Song Credits
 
 - *Mellon Collie and the Infinite Sadness* - The Smashing Pumpkins (via [midiworld.com](http://www.midiworld.com/files/1105/))
 
-##### Instrument Support
+#### Instrument Support
 
 By default we only include and use one instrument (acoustic grand piano) for all channels.  For complete instrument support, download the MIDI.js Soundfonts from the link above, and change line 1 of js/app.js to:
 
@@ -33,3 +27,9 @@ By default we only include and use one instrument (acoustic grand piano) for all
 ##### License:
 
 MIT.  Free for any reason ✌(-‿-)✌
+
+## This exists because these exist:
+
+- [MIDI.js](https://github.com/mudcube/MIDI.js)
+- [three.js](https://github.com/mrdoob/three.js/)
+- [MIDI.js Soundfonts](https://github.com/gleitz/midi-js-soundfonts)
