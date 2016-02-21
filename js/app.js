@@ -1,23 +1,10 @@
-var _USE_FULL_SOUNDFONT_LIBRARY = false; //set this variable to true after downloading https://github.com/gleitz/midi-js-soundfonts and placing in soundfont directory
+var USE_FULL_SOUNDFONT_LIBRARY = false, //set this variable to true after downloading https://github.com/gleitz/midi-js-soundfonts and placing in soundfont directory
 
-var FPS = {show: false, last: Date.now(), count: 0},
-    NOTE = {last: Date.now(), next: Date.now()},
-    INPUT = {last: Date.now(), e: null, x: null, y: null, mousedown: false, cursor: null};
-
-var EFFECTS = {};
-
-var SONG, SONGS = [
-  {
-    path: "midi/mellon-collie-and-the-infinite-sadness.mid",
-    bpm: 86,
-    effectMapping: {
-      globals: ['radial_strobe'],
-      channels: []
-    }
-  }
-];
-
-var SCENE, CAMERA, RENDERER;
+  FPS = {show: false, last: Date.now(), count: 0},
+  NOTE = {last: Date.now(), next: Date.now()},
+  INPUT = {last: Date.now(), e: null, x: null, y: null, mousedown: false, cursor: null},
+  EFFECTS = {},
+  SONG, SCENE, CAMERA, RENDERER;
 
 ////////////////////////////////
 // INIT
@@ -74,7 +61,7 @@ window.onload = function() {
 
         //if we are using the full soundfont library, load the instruments needed for this song
 
-        if(_USE_FULL_SOUNDFONT_LIBRARY) {
+        if(USE_FULL_SOUNDFONT_LIBRARY) {
           var instruments = MIDI.Player.getFileInstruments();
           var instrumentsToLoad = instruments.length;
           for(let i = 0; i < instruments.length; i++) {

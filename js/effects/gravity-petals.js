@@ -63,6 +63,10 @@ EFFECTS['gravity_petals'] = {
 
     }
 
-  } //tick
+  }, //tick
+
+  randomize: function() {
+
+  }
 
 };

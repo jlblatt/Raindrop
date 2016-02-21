@@ -49,6 +49,10 @@ EFFECTS['basic_raindrop'] = {
 
     }
 
-  } //tick
+  }, //tick
+
+  randomize: function() {
+
+  }
 
 };
