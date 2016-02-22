@@ -61,18 +61,18 @@ window.onload = function() {
 
         //if we are using the full soundfont library, load the instruments needed for this song
 
-        if(USE_FULL_SOUNDFONT_LIBRARY) {
+        if(USE_FULL_SOUNDFONT_LIBRARY || true) {
           var instruments = MIDI.Player.getFileInstruments();
           var instrumentsToLoad = instruments.length;
-          for(let i = 0; i < instruments.length; i++) {
-            var channel = Math.random();
+          for(var i = 0; i < instruments.length; i++) {
+            var channel = i;
             MIDI.loadResource({
               instrument: instruments[i],
-              onsuccess: function() {
-                MIDI.programChange(i, MIDI.GM.byName[instruments[i]].number);
+              onsuccess: function(c) {
+                MIDI.programChange(c, MIDI.GM.byName[instruments[c]].number);
                 instrumentsToLoad--;
                 if(instrumentsToLoad == 0) appReady();
-              }
+              } (channel)
             });
           }
         }
