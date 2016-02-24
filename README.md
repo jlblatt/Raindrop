@@ -12,7 +12,7 @@ The result is a much simpler visualizer than most (I'm a web developer, not a gr
 
 #### Instructions
 
-Move your mouse around.  Hold your mouse down.  Press any/all keys on your keyboard (space will randomize some effects).  Pretend like you are playing a piano (especially with Mellon Collie).  Have fun :)
+Move your mouse around.  Hold your mouse down.  Press any/all keys on your keyboard (space will randomize some effects).  Pretend like you are playing a piano.  Have fun :)
 
 #### Song Credits
 

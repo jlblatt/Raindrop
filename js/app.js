@@ -1,4 +1,4 @@
-var USE_FULL_SOUNDFONT_LIBRARY = false, //set this variable to true after downloading https://github.com/gleitz/midi-js-soundfonts and placing in soundfont directory
+var USE_FULL_SOUNDFONT_LIBRARY = true, //set this variable to true after downloading https://github.com/gleitz/midi-js-soundfonts and placing in soundfont directory
 
   FPS = {show: false, last: Date.now(), count: 0},
   NOTE = {last: Date.now(), next: Date.now()},
@@ -61,7 +61,7 @@ window.onload = function() {
 
         //if we are using the full soundfont library, load the instruments needed for this song
 
-        if(USE_FULL_SOUNDFONT_LIBRARY || true) {
+        if(USE_FULL_SOUNDFONT_LIBRARY) {
           var instruments = MIDI.Player.getFileInstruments();
           var instrumentsToLoad = instruments.length;
           for(var i = 0; i < instruments.length; i++) {
