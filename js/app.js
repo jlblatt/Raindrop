@@ -41,12 +41,14 @@ window.onload = function() {
   for(var i = 0; i < SONG.effectMapping.globals.length; i++) {
     if(EFFECTS.hasOwnProperty(SONG.effectMapping.globals[i])) {
       SONG.effectMapping.globals[i] = EFFECTS[SONG.effectMapping.globals[i]];
+      if(SONG.effectMapping.globals[i].hasOwnProperty('setup')) SONG.effectMapping.globals[i].setup();
     }
   }
 
   for(var i in SONG.effectMapping.channels) {
     if(EFFECTS.hasOwnProperty(SONG.effectMapping.channels[i])) {
       SONG.effectMapping.channels[i] = EFFECTS[SONG.effectMapping.channels[i]];
+      if(SONG.effectMapping.channels[i].hasOwnProperty('setup')) SONG.effectMapping.channels[i].setup();
     }
   }
 

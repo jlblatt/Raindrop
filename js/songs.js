@@ -1,17 +1,18 @@
 var SONGS = [
-  // {
-  //   path: "midi/mellon-collie-and-the-infinite-sadness.mid",
-  //   bpm: 86,
-  //   effectMapping: {
-  //     globals: ['gravity_petals'],
-  //     channels: {
-  //       0: 'basic_raindrop',
-  //       1: 'crosshatch',
-  //       2: 'crosshatch',
-  //       3: 'crosshatch'
-  //     }
-  //   }
-  // },
+  {
+    path: "midi/mellon-collie-and-the-infinite-sadness.mid",
+    bpm: 86,
+    wadsworth: 50,
+    effectMapping: {
+      globals: ['gravity_petals'],
+      channels: {
+        0: 'basic_raindrop',
+        1: 'is_there_anybody_out_there',
+        2: 'is_there_anybody_out_there',
+        3: 'is_there_anybody_out_there'
+      }
+    }
+  },
   // {
   //   path: "midi/flight-of-the-bumblebee.mid",
   //   bpm: 150,
@@ -48,14 +49,14 @@ var SONGS = [
   //     }
   //   }
   // },
-  {
-    path: "midi/zelda.mid",
-    effectMapping: {
-      globals: [],
-      channels: {
-        0: 'crosshatch',
-        1: 'basic_raindrop'
-      }
-    }
-  }
+  // {
+  //   path: "midi/zelda.mid",
+  //   effectMapping: {
+  //     globals: ['gravity_petals'],
+  //     channels: {
+  //       1: 'crosshatch',
+  //       0: 'basic_raindrop'
+  //     }
+  //   }
+  // }
 ];

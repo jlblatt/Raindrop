@@ -1,5 +1,9 @@
 EFFECTS['blank'] = {
 
+  setup: function() {
+
+  },
+
   spawn: function(note) {
 
   },
