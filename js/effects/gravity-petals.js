@@ -24,6 +24,7 @@ EFFECTS['gravity_petals'] = {
       SCENE.add(mesh);
       this.KERNALS.push(mesh);
     }
+    
   }, //spawn
 
   despawn: function(note) {
