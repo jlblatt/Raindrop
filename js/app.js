@@ -35,7 +35,7 @@ window.onload = function() {
 
   SONG = SONGS[Math.floor(Math.random() * SONGS.length)];
 
-  if(!SONG.effectMapping.hasOwnProperty('channels')) SONG.effectMapping.channels = [];
+  if(!SONG.effectMapping.hasOwnProperty('channels')) SONG.effectMapping.channels = {};
   if(!SONG.effectMapping.hasOwnProperty('globals')) SONG.effectMapping.globals = [];
 
   for(var i = 0; i < SONG.effectMapping.globals.length; i++) {
@@ -44,7 +44,7 @@ window.onload = function() {
     }
   }
 
-  for(var i = 0; i < SONG.effectMapping.channels.length; i++) {
+  for(var i in SONG.effectMapping.channels) {
     if(EFFECTS.hasOwnProperty(SONG.effectMapping.channels[i])) {
       SONG.effectMapping.channels[i] = EFFECTS[SONG.effectMapping.channels[i]];
     }
@@ -52,12 +52,15 @@ window.onload = function() {
 
   //init MIDI.js
 
-  MIDI.Player.BPM = SONG.bpm ? SONG.bpm : 100;
+  MIDI.Player.BPM = SONG.bpm ? SONG.bpm : 120;
 
   MIDI.loadPlugin({
     soundfontUrl: "soundfont/",
     onsuccess: function() {
       MIDI.Player.loadFile(SONG.path, function() {
+
+        //seek?
+        if(SONG.hasOwnProperty('wadsworth')) MIDI.Player.currentTime = SONG.wadsworth * 1000;
 
         //if we are using the full soundfont library, load the instruments needed for this song
 
@@ -91,7 +94,7 @@ window.onload = function() {
       NOTE.last = Date.now();
 
       var eMap = SONG.effectMapping.channels;
-      if(eMap.length > e.channel && eMap[e.channel]) {
+      if(e.hasOwnProperty('channel') && eMap[e.channel]) {
         if(e.message == 144 && eMap[e.channel].hasOwnProperty('spawn')) {
           eMap[e.channel].spawn(e);
         } else if(e.message == 128 && eMap[e.channel].hasOwnProperty('despawn')) {
@@ -121,7 +124,7 @@ window.onload = function() {
         MIDI.Player.resume();
       }
 
-      for(var i = 0; i < SONG.effectMapping.channels.length; i++) {
+      for(var i in SONG.effectMapping.channels) {
         if(SONG.effectMapping.channels[i] && SONG.effectMapping.channels[i].hasOwnProperty('input')) {
           SONG.effectMapping.channels[i].input();
         }
@@ -158,7 +161,7 @@ window.onload = function() {
 
       if(e.which == 32) {
         //dispatch randomize events
-        for(var i = 0; i < SONG.effectMapping.channels.length; i++) {
+        for(var i in SONG.effectMapping.channels) {
           if(SONG.effectMapping.channels[i] && SONG.effectMapping.channels[i].hasOwnProperty('randomize')) {
             SONG.effectMapping.channels[i].randomize();
           }
@@ -171,7 +174,7 @@ window.onload = function() {
         }
       }
 
-      //return false;
+      return false;
 
     }
 
@@ -199,7 +202,7 @@ function loop() {
   if(MIDI.Player.playing && Date.now() > NOTE.next) {
     NOTE.next = Date.now() + (60000 / (MIDI.Player.BPM * 8));
 
-    for(var i = 0; i < SONG.effectMapping.channels.length; i++) {
+    for(var i in SONG.effectMapping.channels) {
       if(SONG.effectMapping.channels[i] && SONG.effectMapping.channels[i].hasOwnProperty('click')) {
         SONG.effectMapping.channels[i].click();
       }
@@ -213,7 +216,7 @@ function loop() {
   }
 
   //dispatch tick events
-  for(var i = 0; i < SONG.effectMapping.channels.length; i++) {
+  for(var i in SONG.effectMapping.channels) {
     if(SONG.effectMapping.channels[i] && SONG.effectMapping.channels[i].hasOwnProperty('tick')) {
       SONG.effectMapping.channels[i].tick();
     }
