@@ -52,7 +52,7 @@ window.onload = function() {
 
   //init MIDI.js
 
-  MIDI.Player.BPM = SONG.bpm ? SONG.bpm : 120;
+  if(SONG.hasOwnProperty('bpm')) MIDI.Player.BPM = SONG.bpm;
 
   MIDI.loadPlugin({
     soundfontUrl: "soundfont/",
@@ -174,7 +174,7 @@ window.onload = function() {
         }
       }
 
-      return false;
+      //return false;
 
     }
 
