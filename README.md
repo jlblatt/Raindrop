@@ -17,6 +17,7 @@ Move your mouse around.  Hold your mouse down.  Press any/all keys on your keybo
 #### Song Credits
 
 - *Mellon Collie and the Infinite Sadness* - The Smashing Pumpkins (via [midiworld.com](http://www.midiworld.com/files/1105/))
+- *Flight of the Bumblebee* - Nikolai Rimsky-Korsakov (via [8notes.com](http://www.8notes.com/scores/2859.asp?ftype=midi))
 
 #### Instrument Support
 
