@@ -20,6 +20,7 @@ Move your mouse around.  Hold your mouse down.  Press any/all keys on your keybo
 - *Flight of the Bumblebee* - Nikolai Rimsky-Korsakov (via [8notes.com](http://www.8notes.com/scores/2859.asp?ftype=midi))
 - *Greensleeves* - Unknown Composer (via [tripod.com](http://xaa.tripod.com/PBMusic.htm))
 - *Angel's Fear* & *Distant Thunder* - Hiroki Kikuta (via [khinsider.com](http://www.khinsider.com/midi/snes/secret-of-mana))
+- *The Legend of Zelda - Title Screen* - Koji Kondo (via [vgmusic.com](http://www.vgmusic.com/music/console/nintendo/nes/))
 
 #### Instrument Support
 
