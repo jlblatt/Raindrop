@@ -1,9 +1,9 @@
 EFFECTS['crosshatch'] = {
 
   SETTINGS: {
-    opacity: 0.20,
+    opacity: 0.18,
     fadeSpeed: 1800,
-    spread: 500
+    spread: 600
   },
 
   HATCHES: [],
@@ -75,8 +75,8 @@ EFFECTS['crosshatch'] = {
 
   randomize: function() {
     this.SETTINGS.fadeSpeed = 800 + Math.floor(Math.random() * 2000);
-    this.SETTINGS.opacity = (Math.random() * 0.20) + .1;
-    this.SETTINGS.spread = (Math.random() * 600) + 400;
+    this.SETTINGS.opacity = (Math.random() * 0.20) + .08;
+    this.SETTINGS.spread = (Math.random() * 800) + 400;
   }
 
 };
