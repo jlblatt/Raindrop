@@ -7,6 +7,7 @@ EFFECTS['box_fireworks'] = {
   },
 
   spawn: function(note) {
+    //http://www.color-hex.com/color-palette/15138
     var randcolors = [0x08ddd7, 0x68cdff, 0xffffff, 0xffc68c, 0xff8746];
     var randcolor = randcolors[Math.floor(Math.random() * randcolors.length)];
 

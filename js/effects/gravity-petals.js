@@ -1,6 +1,6 @@
 EFFECTS['gravity_petals'] = {
 
-  KERNALS: [],
+  PETALS: [],
 
   spawn: function(note) {
 
@@ -22,7 +22,7 @@ EFFECTS['gravity_petals'] = {
       mesh.rotz = (Math.random() - .5) * 1;
 
       SCENE.add(mesh);
-      this.KERNALS.push(mesh);
+      this.PETALS.push(mesh);
     }
     
   }, //spawn
@@ -41,25 +41,25 @@ EFFECTS['gravity_petals'] = {
 
   tick: function() {
 
-    var i = this.KERNALS.length;
+    var i = this.PETALS.length;
 
     while(i--) {
 
-      var k = this.KERNALS[i];
+      var p = this.PETALS[i];
 
-      k.material.opacity -= MIDI.Player.BPM / 20000;
-      k.position.x += k.dx;
-      k.position.y += k.dy;
-      k.position.z += k.dz;
-      k.rotation.x += k.rotx;
-      k.rotation.y += k.roty;
-      k.rotation.z += k.rotz;
+      p.material.opacity -= MIDI.Player.BPM / 20000;
+      p.position.x += p.dx;
+      p.position.y += p.dy;
+      p.position.z += p.dz;
+      p.rotation.x += p.rotx;
+      p.rotation.y += p.roty;
+      p.rotation.z += p.rotz;
 
-      k.dy -= .15;
+      p.dy -= .15;
 
-      if(k.material.opacity < 0) {
-        SCENE.remove(k);
-        this.KERNALS.splice(i, 1);
+      if(p.material.opacity < 0) {
+        SCENE.remove(p);
+        this.PETALS.splice(i, 1);
       }
 
     }

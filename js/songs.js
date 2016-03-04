@@ -63,5 +63,14 @@ var SONGS = [
         0: 'basic_raindrop'
       }
     }
+  },
+  {
+    path: "midi/mega-man-3.mid",
+    effectMapping: {
+      globals: ['gravity_petals', 'mesh_pit'],
+      channels: {
+        0: 'is_there_anybody_out_there',
+      }
+    }
   }
 ];

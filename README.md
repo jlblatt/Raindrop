@@ -21,6 +21,7 @@ Move your mouse around.  Hold your mouse down.  Press any/all keys on your keybo
 - *Greensleeves* - Unknown Composer (via [tripod.com](http://xaa.tripod.com/PBMusic.htm))
 - *Angel's Fear* & *Distant Thunder* - Hiroki Kikuta (via [khinsider.com](http://www.khinsider.com/midi/snes/secret-of-mana))
 - *The Legend of Zelda - Title Screen* - Koji Kondo (via [vgmusic.com](http://www.vgmusic.com/music/console/nintendo/nes/))
+- *Mega Man 3 - Title Screen* - Yasuaki Fujita (via [khinsider.com](http://www.khinsider.com/midi/nes/mega-man-2))
 
 #### Instrument Support
 
