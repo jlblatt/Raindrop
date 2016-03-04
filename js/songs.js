@@ -67,9 +67,9 @@ var SONGS = [
   {
     path: "midi/mega-man-3.mid",
     effectMapping: {
-      globals: ['gravity_petals', 'mesh_pit'],
+      globals: ['basic_raindrop'],
       channels: {
-        0: 'is_there_anybody_out_there',
+        1: 'mesh_pit'
       }
     }
   }
