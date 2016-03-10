@@ -54,7 +54,9 @@ EFFECTS['is_there_anybody_out_there'] = {
   },
 
   randomize: function() {
-
+    for(var i = 0; i < this.STARS.length; i++) {
+      this.STARS[i].material.color = new THREE.Color(THEME[Math.floor(Math.random() * THEME.length)]);
+    }
   }
 
 };

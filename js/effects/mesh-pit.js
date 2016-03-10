@@ -121,6 +121,15 @@ EFFECTS['mesh_pit'] = {
 
   randomize: function() {
 
+    for(var i = 0; i < this.PANELS.length; i++) {
+      for(var j = 0; j < this.PANELS[i].length; j++) {
+        var p = this.PANELS[i][j];
+        var randcolor = THEME[Math.floor(Math.random() * THEME.length)];
+        p.material.color = new THREE.Color(randcolor);
+        p.material.emissive = new THREE.Color(randcolor);
+      }
+    }
+
   }
 
 };
