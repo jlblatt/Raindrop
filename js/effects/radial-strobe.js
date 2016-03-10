@@ -19,8 +19,9 @@ EFFECTS['radial_strobe'] = {
   },
 
   click: function() {
+    var randcolor = THEME[Math.floor(Math.random() * THEME.length)];
 
-    var material = new THREE.MeshBasicMaterial({color: 0xffffff, transparent: true, opacity: 1});
+    var material = new THREE.MeshBasicMaterial({color: randcolor, transparent: true, opacity: 1});
     var geometry = new THREE.RingGeometry(this.SETTINGS.innerRadius, this.SETTINGS.outerRadius, this.SETTINGS.segments, 1);
     var mesh = new THREE.Mesh(geometry, material);
 

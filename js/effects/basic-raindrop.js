@@ -3,8 +3,9 @@ EFFECTS['basic_raindrop'] = {
   DROPS: [],
 
   spawn: function(note) {
+    var randcolor = THEME[Math.floor(Math.random() * THEME.length)];
 
-    var material = new THREE.MeshBasicMaterial({color: 0xccccff, transparent: true, opacity: 1});
+    var material = new THREE.MeshBasicMaterial({color: randcolor, transparent: true, opacity: 1});
     var geometry = new THREE.RingGeometry(5, 5.15, 96, 1);
     var mesh = new THREE.Mesh(geometry, material);
 

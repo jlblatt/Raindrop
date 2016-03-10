@@ -17,10 +17,7 @@ EFFECTS['mesh_pit'] = {
       this.PANELS.push([]);
 
       for(var j = 0; j < ycount; j++) {
-
-        //http://www.color-hex.com/color-palette/8489
-        var randcolors = [0x141427, 0x566e89, 0x6aa0c1, 0x8cb9d4, 0x22475e];
-        var randcolor = randcolors[Math.floor(Math.random() * randcolors.length)];
+        var randcolor = THEME[Math.floor(Math.random() * THEME.length)];
         var baseopacity = this.SETTINGS.brightness + (Math.random() * .2);
         var sideWidth = this.SETTINGS.complexity * 12;
 

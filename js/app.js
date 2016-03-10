@@ -4,7 +4,7 @@ var USE_FULL_SOUNDFONT_LIBRARY = true, //set this variable to true after downloa
   NOTE = {last: Date.now(), next: Date.now()},
   INPUT = {last: Date.now(), e: null, x: null, y: null, mousedown: false, cursor: null},
   EFFECTS = {},
-  SONG, SCENE, CAMERA, RENDERER;
+  SONG, THEME, SCENE, CAMERA, RENDERER;
 
 ////////////////////////////////
 // INIT
@@ -31,7 +31,9 @@ window.onload = function() {
   INPUT.cursor = new THREE.Mesh(c_geo, c_mat);
   SCENE.add(INPUT.cursor);
 
-  //setup song and effect mapping
+  //setup theme, song, and effect mapping
+
+  THEME = THEMES[Math.floor(Math.random() * THEMES.length)];
 
   SONG = SONGS[Math.floor(Math.random() * SONGS.length)];
   SONG = SONGS[6];
@@ -163,6 +165,9 @@ window.onload = function() {
       inputEvent(e);
 
       if(e.which == 32) {
+        //change theme
+        THEME = THEMES[Math.floor(Math.random() * THEMES.length)];
+        
         //dispatch randomize events
         for(var i in SONG.effectMapping.channels) {
           if(SONG.effectMapping.channels[i] && SONG.effectMapping.channels[i].hasOwnProperty('randomize')) {

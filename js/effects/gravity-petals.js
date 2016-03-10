@@ -5,8 +5,9 @@ EFFECTS['gravity_petals'] = {
   spawn: function(note) {
 
     for(var i = 0; i < 4; i++) {
-      var material = new THREE.MeshBasicMaterial({color: 0xffffff, transparent: true, opacity: 1});
-      //var geometry = new THREE.CircleGeometry(5, 24);
+      var randcolor = THEME[Math.floor(Math.random() * THEME.length)];
+
+      var material = new THREE.MeshBasicMaterial({color: randcolor, transparent: true, opacity: 1});
       var geometry = new THREE.CylinderGeometry(5, 5, 1, 24);
       var mesh = new THREE.Mesh(geometry, material);
 

@@ -69,7 +69,7 @@ var SONGS = [
     effectMapping: {
       globals: ['basic_raindrop'],
       channels: {
-        0: 'mesh_pit'
+        1: 'mesh_pit'
       }
     }
   }

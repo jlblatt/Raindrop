@@ -23,6 +23,11 @@ Move your mouse around.  Hold your mouse down.  Press any/all keys on your keybo
 - *The Legend of Zelda - Title Screen* - Koji Kondo (via [vgmusic.com](http://www.vgmusic.com/music/console/nintendo/nes/))
 - *Mega Man 3 - Title Screen* - Yasuaki Fujita (via [khinsider.com](http://www.khinsider.com/midi/nes/mega-man-2))
 
+#### Theme Credits
+
+- *Dica da Nutri* -  ana_locks (via[color-hex.com](http://www.color-hex.com/color-palette/15138))
+- *Monolith of Ideas* - lovelylakes (via [color-hex.com](http://www.color-hex.com/color-palette/8489))
+
 #### Instrument Support
 
 By default we only include and use one instrument (acoustic grand piano) for all channels.  For complete instrument support, download the MIDI.js Soundfonts from the link above, and change line 1 of js/app.js to:

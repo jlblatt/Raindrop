@@ -13,8 +13,7 @@ EFFECTS['is_there_anybody_out_there'] = {
 
   setup: function() {
     for(var i = 0; i < this.SETTINGS.count; i++) {
-      var randcolors = [0xffeeee, 0xeeffee, 0xeeeeff, 0xffffff];
-      var randcolor = randcolors[Math.floor(Math.random() * randcolors.length)];
+      var randcolor = THEME[Math.floor(Math.random() * THEME.length)];
 
       var material = new THREE.MeshBasicMaterial({color: randcolor});
 
