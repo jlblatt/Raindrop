@@ -25,8 +25,9 @@ Move your mouse around.  Hold your mouse down.  Press any/all keys on your keybo
 
 #### Theme Credits
 
-- *Dica da Nutri* -  ana_locks (via[color-hex.com](http://www.color-hex.com/color-palette/15138))
+- *Dica da Nutri* -  ana_locks (via [color-hex.com](http://www.color-hex.com/color-palette/15138))
 - *Monolith of Ideas* - lovelylakes (via [color-hex.com](http://www.color-hex.com/color-palette/8489))
+- *Neon002* - daftblue (via [color-hex.com](http://www.color-hex.com/color-palette/13425))
 
 #### Instrument Support
 
