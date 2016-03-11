@@ -1,7 +1,7 @@
 EFFECTS['gforce'] = {
 
   SETTINGS: {
-    complexity: 16,
+    complexity: 12,
     spawnAmount: 4,
     growAmt: .06
   },
@@ -25,9 +25,11 @@ EFFECTS['gforce'] = {
         var material = new THREE.LineBasicMaterial({color: randcolor, transparent: true, opacity: 1});
         material.blending = THREE.AdditiveBlending;
 
-        var geometry = new THREE.Geometry();
-        var newVector = new THREE.Vector3(x + dx, (Math.random() * 100) - 50, -50);
+        var yMax = (Math.abs(1 + j - this.SETTINGS.complexity / 2) * 80) + 50;
+        var y = (Math.random() * yMax) - yMax / 2;
+        var newVector = new THREE.Vector3(x + dx, y, -60);
 
+        var geometry = new THREE.Geometry();
         geometry.vertices.push(lastVector);
         geometry.vertices.push(newVector);
         lastVector = newVector;
