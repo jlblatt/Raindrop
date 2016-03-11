@@ -4,7 +4,7 @@ var USE_FULL_SOUNDFONT_LIBRARY = true, //set this variable to true after downloa
   NOTE = {last: Date.now(), next: Date.now()},
   INPUT = {last: Date.now(), e: null, x: null, y: null, mousedown: false, cursor: null},
   EFFECTS = {},
-  SONG, THEME, SCENE, CAMERA, RENDERER;
+  SONG, THEME, THEMEPTR, SCENE, CAMERA, RENDERER;
 
 ////////////////////////////////
 // INIT
@@ -33,7 +33,8 @@ window.onload = function() {
 
   //setup theme, song, and effect mapping
 
-  THEME = THEMES[Math.floor(Math.random() * THEMES.length)];
+  THEMEPTR = Math.floor(Math.random() * THEMES.length);
+  THEME = THEMES[THEMEPTR];
 
   SONG = SONGS[Math.floor(Math.random() * SONGS.length)];
   SONG = SONGS[6];
@@ -166,7 +167,7 @@ window.onload = function() {
 
       if(e.which == 32) {
         //change theme
-        THEME = THEMES[Math.floor(Math.random() * THEMES.length)];
+        THEME = THEMES[THEMEPTR++ % THEMES.length];
         
         //dispatch randomize events
         for(var i in SONG.effectMapping.channels) {
