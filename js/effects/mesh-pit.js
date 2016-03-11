@@ -21,8 +21,7 @@ EFFECTS['mesh_pit'] = {
         var baseopacity = this.SETTINGS.brightness + (Math.random() * .2);
         var sideWidth = this.SETTINGS.complexity * 12;
 
-        //var material = new THREE.MeshBasicMaterial({color: randcolor, transparent: true, opacity: baseopacity});
-        var material = new THREE.MeshLambertMaterial({color: randcolor, emissive: randcolor, transparent: true, opacity: baseopacity});
+        var material = new THREE.MeshBasicMaterial({color: randcolor, transparent: true, opacity: baseopacity});
         var geometry = new THREE.PlaneGeometry(sideWidth, sideWidth);
         var mesh = new THREE.Mesh(geometry, material);
 
@@ -39,9 +38,6 @@ EFFECTS['mesh_pit'] = {
         mesh.baseopacity = baseopacity;
         this.PANELS[i].push(mesh);
       }
-
-      var light = new THREE.AmbientLight(0x000000);
-      SCENE.add(light);
 
     }
 
@@ -126,7 +122,6 @@ EFFECTS['mesh_pit'] = {
         var p = this.PANELS[i][j];
         var randcolor = THEME[Math.floor(Math.random() * THEME.length)];
         p.material.color = new THREE.Color(randcolor);
-        p.material.emissive = new THREE.Color(randcolor);
       }
     }
 
