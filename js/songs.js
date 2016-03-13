@@ -67,9 +67,11 @@ var SONGS = [
   {
     path: "midi/mega-man-3.mid",
     effectMapping: {
-      globals: ['gforce'],
+      globals: [],
       channels: {
-        //1: 'mesh_pit'
+        0: 'box_fireworks',
+        1: 'mesh_pit',
+        2: 'gforce'
       }
     }
   }
