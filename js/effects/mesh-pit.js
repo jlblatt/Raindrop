@@ -107,7 +107,7 @@ EFFECTS['mesh_pit'] = {
         }
         
         if(p.material.opacity > p.baseopacity) {
-          p.material.opacity -= speed / 1.5;
+          p.material.opacity -= speed;
         }
       }
 
