@@ -2,8 +2,8 @@ EFFECTS['rezzed'] = {
 
   SETTINGS: {
     size: 100,
-    drawDistance: 12,
-    separation: 12
+    drawDistance: 18,
+    separation: 24
   },
 
   PLANES: [],
@@ -18,7 +18,7 @@ EFFECTS['rezzed'] = {
 
     for(var j = 0; j < 2; j++) {
       var material = new THREE.MeshBasicMaterial({color: nextcolor, wireframe: true});
-      var geometry = new THREE.PlaneGeometry(this.SETTINGS.size, this.SETTINGS.size, parseInt(this.SETTINGS.size / 6), parseInt(this.SETTINGS.size / 6) );
+      var geometry = new THREE.PlaneGeometry(this.SETTINGS.size * 2, this.SETTINGS.size, parseInt(this.SETTINGS.size / 6), parseInt(this.SETTINGS.size / 6) );
       var mesh = new THREE.Mesh(geometry, material);
 
       mesh.position.y = ((j % 2 ? 1 : -1) * this.SETTINGS.separation);
@@ -28,6 +28,9 @@ EFFECTS['rezzed'] = {
       mesh.rotation.y = 0;
 
       SCENE.add(mesh);
+
+      mesh.vy = 0;
+      mesh.ay = (j % 2 == 0 ? 1 : -1) / 10;
 
       this.PLANES.push(mesh);
     }
@@ -43,11 +46,14 @@ EFFECTS['rezzed'] = {
   }, //setup
 
   spawn: function(note) {
-    
-    var i = this.PLANES.length;
 
-    while(i--) {
-      this.PLANES[i].position.y += (this.PLANES[i].position.y > 0 ? 1 : -1) * (this.SETTINGS.separation / 20);
+    for(var i = 0; i < this.PLANES.length; i++) {
+      var p = this.PLANES[i];
+      //if(p.vy < -p.ay * 10 || p.vy > p.ay * 10) {
+      if(Math.abs(p.position.y) < this.SETTINGS.separation * 3) {
+        p.vy = -p.ay * 10;
+        p.position.y += -p.ay * 10;
+      }
     }
 
   }, //spawn
@@ -72,13 +78,17 @@ EFFECTS['rezzed'] = {
 
       var p = this.PLANES[i];
 
-      p.position.z += (MIDI.Player.BPM / 250);
+      p.position.z += MIDI.Player.BPM / 250;
 
-      if(p.position.y > this.SETTINGS.separation) {
-        p.position.y -= MIDI.Player.BPM / 2500;
-      } else if(p.position.y < -this.SETTINGS.separation) {
-        p.position.y += MIDI.Player.BPM / 2500;
+      p.vy += p.ay;
+
+      if(p.ay > 0 && p.vy < 0 || p.ay < 0 && p.vy > 0) {
+
       }
+
+      if(Math.abs(p.position.y) > this.SETTINGS.separation) {
+        p.position.y += p.vy;
+      } 
       
       if(p.position.z > (this.SETTINGS.size * (this.SETTINGS.drawDistance / 1.5)) + this.SETTINGS.size) {
         SCENE.remove(p);
@@ -92,6 +102,14 @@ EFFECTS['rezzed'] = {
 
   randomize: function() {
 
-  }
+    for(var i = 0; i < this.PLANES.length; i++) {
+      var p = this.PLANES[i];
+      var nextcolor = THEME[this.COLORCOUNT];
+      this.COLORCOUNT++;
+      if(this.COLORCOUNT > THEME.length - 1) this.COLORCOUNT = 0;
+      p.material.color = new THREE.Color(nextcolor); 
+    }
+
+  } //randomize
 
 };
