@@ -6,7 +6,7 @@ var SONGS = [
     effectMapping: {
       globals: [],
       channels: {
-        0: 'box_fireworks',
+        0: 'gravity_petals',
         1: 'is_there_anybody_out_there',
         2: 'is_there_anybody_out_there',
         3: 'is_there_anybody_out_there'
@@ -41,16 +41,6 @@ var SONGS = [
         0: 'basic_raindrop',
         1: 'is_there_anybody_out_there',
         2: 'box_fireworks'
-      }
-    }
-  },
-  {
-    path: "midi/distant-thunder.mid",
-    effectMapping: {
-      globals: [],
-      channels: {
-        0: 'crosshatch',
-        2: 'basic_raindrop'
       }
     }
   },
