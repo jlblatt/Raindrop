@@ -197,9 +197,11 @@ window.onload = function() {
 // MAIN LOOP
 ////////////////////////////////
 
-function loop() {
+function loop(time) {
 
   requestAnimationFrame(loop);
+
+  TWEEN.update(time);
 
   //pause midi if mouse has been idle and there have been notes recent enough
 

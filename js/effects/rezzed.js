@@ -4,7 +4,7 @@ EFFECTS['rezzed'] = {
     size: 360,
     drawDistance: 6,
     height: 96,
-    maxBots: 16,
+    maxBots: 999,
     speed: 1 / 150
   },
 
@@ -13,6 +13,38 @@ EFFECTS['rezzed'] = {
   DISTANCECOUNT: 0,
 
   BOTS: [],
+  STAGES: [
+    {
+      //stage 1
+      targetMatrix: [
+        {x: -400, y: 150},
+        {x: 400, y: 150},
+        {x: -100, y: 200},
+        {x: 100, y: 200},
+        {x: -300, y: 100},
+        {x: 300, y: 100},
+        {x: -200, y: 150},
+        {x: 200, y: 150},
+        {x: -400, y: 50},
+        {x: 400, y: 50},
+        {x: -100, y: 100},
+        {x: 100, y: 100},
+        {x: -300, y: 0},
+        {x: 300, y: 0},
+        {x: -200, y: 50},
+        {x: 200, y: 50}
+      ],
+      currTarget: 0
+    },
+
+    {
+      //stage two
+    },
+
+    {
+      //stage three
+    }
+  ],
 
   newPanel: function(i) {
 
@@ -27,7 +59,7 @@ EFFECTS['rezzed'] = {
     mesh.position.y = -this.SETTINGS.height;
     mesh.position.z = (this.SETTINGS.size * (this.SETTINGS.drawDistance / 1.5)) + (-this.SETTINGS.size * i);
 
-    mesh.rotation.x = Math.PI / 2;
+    mesh.rotation.x = -Math.PI / 2;
 
     SCENE.add(mesh);
 
@@ -57,7 +89,6 @@ EFFECTS['rezzed'] = {
     var randcolor = THEME[Math.floor(Math.random() * THEME.length)];
 
     var material = new THREE.MeshBasicMaterial({color: randcolor, transparent: true, opacity: 1});
-    material.blending = THREE.AdditiveBlending;
 
     var geometry = new THREE.BoxGeometry(70, 70, 7)
 
@@ -69,9 +100,35 @@ EFFECTS['rezzed'] = {
 
     mesh.position.x = x;
     mesh.position.y = -this.SETTINGS.height;
-    mesh.position.z = Math.floor(Math.random() * this.SETTINGS.size / 2);
+    //mesh.position.z = Math.floor(Math.random() * this.SETTINGS.size / 2);
+    mesh.position.z = this.PLANES[this.SETTINGS.drawDistance - 2].position.z - this.SETTINGS.size / 2;
 
-    mesh.rotation.x = Math.PI / 2;
+    mesh.rotation.x = -2 * Math.PI / 2;
+
+    mesh.from = { 
+      x: mesh.position.x, 
+      y: mesh.position.y, 
+      rotx: mesh.rotation.x
+    };
+
+    mesh.tween = new TWEEN.Tween(mesh.from)
+        .to({ 
+          x: this.STAGES[0].targetMatrix[this.STAGES[0].currTarget].x, 
+          y: this.STAGES[0].targetMatrix[this.STAGES[0].currTarget].y, 
+          rotx: 0
+        }, 1400)
+        .onUpdate(function() {
+          mesh.position.x = mesh.from.x;
+          mesh.position.y = mesh.from.y;
+          mesh.rotation.x = mesh.from.rotx;
+        })
+        .onComplete(function() {
+
+        })
+    .start();
+
+    this.STAGES[0].currTarget++;
+    if(this.STAGES[0].currTarget > this.STAGES[0].targetMatrix.length - 1) this.STAGES[0].currTarget = 0;
 
     SCENE.add(mesh);
 
