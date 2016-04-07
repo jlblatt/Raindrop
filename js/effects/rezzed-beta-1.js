@@ -1,4 +1,4 @@
-EFFECTS['rezzed'] = {
+EFFECTS['rezzed_beta_1'] = {
 
   SETTINGS: {
     size: 100,
