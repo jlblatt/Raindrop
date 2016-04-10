@@ -49,7 +49,7 @@ var SONGS = [
     effectMapping: {
       globals: ['gravity_petals'],
       channels: {
-        1: 'rezzed',
+        1: 'crosshatch',
         0: 'basic_raindrop'
       }
     }

@@ -37,7 +37,7 @@ window.onload = function() {
   THEME = THEMES[THEMEPTR];
 
   SONG = SONGS[Math.floor(Math.random() * SONGS.length)];
-  SONG = SONGS[4];
+  SONG = SONGS[6];
 
   if(!SONG.effectMapping.hasOwnProperty('channels')) SONG.effectMapping.channels = {};
   if(!SONG.effectMapping.hasOwnProperty('globals')) SONG.effectMapping.globals = [];
