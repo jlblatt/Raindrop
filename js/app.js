@@ -1,4 +1,4 @@
-var USE_FULL_SOUNDFONT_LIBRARY = true, //set this variable to true after downloading https://github.com/gleitz/midi-js-soundfonts and placing in soundfont directory
+var USE_FULL_SOUNDFONT_LIBRARY = false, //set this variable to true after downloading https://github.com/gleitz/midi-js-soundfonts and placing in soundfont directory
 
   FPS = {show: false, last: Date.now(), count: 0},
   NOTE = {last: Date.now(), next: Date.now()},
@@ -37,7 +37,7 @@ window.onload = function() {
   THEME = THEMES[THEMEPTR];
 
   SONG = SONGS[Math.floor(Math.random() * SONGS.length)];
-  SONG = SONGS[6];
+  SONG = SONGS[0];
 
   if(!SONG.effectMapping.hasOwnProperty('channels')) SONG.effectMapping.channels = {};
   if(!SONG.effectMapping.hasOwnProperty('globals')) SONG.effectMapping.globals = [];
